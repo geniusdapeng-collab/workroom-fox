@@ -11,7 +11,7 @@
   "release": {
     "appId": "com.geniusdapeng.workroomfox",
     "channel": "stable",
-    "artifactPrefix": "Workroom Fox",
+    "artifactPrefix": "Workroom.Fox",
     "workflow": ".github/workflows/build-desktop.yml",
     "website": "apps/site"
   },
