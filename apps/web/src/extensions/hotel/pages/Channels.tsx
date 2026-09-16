@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 import { ensureDemoLogin, trpc } from "../../../lib/trpc";
 import { Bridge } from "../../../shell/Bridge";
-import { SkeletonBlock, SystemDivider } from "../../../components/hud";
+import { Skeleton, SystemDivider } from "../../../components/hud";
 import { Ev, fmtTime, HBar, Note, PageHead, Row, Tag } from "../components/Twin";
 import { clientValueText } from "../labels";
 
@@ -52,7 +52,7 @@ export default function P14() {
   return (
     <Bridge right={rightPanel}>
       <PageHead title="渠道运营" tag="渠道巡检与内容营销" extra={<Tag tone="holo">每 30 分钟自动巡检</Tag>} />
-      {!ready ? (<><SkeletonBlock lines={2} h={44} /><SkeletonBlock lines={4} /></>) : (
+      {!ready ? (<><Skeleton count={2} height={44} /><Skeleton count={4} /></>) : (
         <div className="space-y-3">
           <SystemDivider time="渠道巡检快照" summary="价格一致性 / 库存同步 / 在线状态（由门店档案中的巡检配置提供）" />
           {snap.length === 0 ? (

@@ -5,7 +5,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ensureDemoLogin, trpc } from "../../../lib/trpc";
 import { Bridge } from "../../../shell/Bridge";
-import { EmptyState, SkeletonBlock, SystemDivider } from "../../../components/hud";
+import { EmptyState, Skeleton, SystemDivider } from "../../../components/hud";
 import { Ev, fmtTime, HBar, Note, PageHead, Row, Stat, Tag } from "../components/Twin";
 import { clientIdentifierText, fieldLabel, clientValueText } from "../labels";
 
@@ -52,7 +52,7 @@ export default function P17() {
   return (
     <Bridge right={rightPanel}>
       <PageHead title="前厅与客房" tag="入退、派单与布草" />
-      {!ready ? (<><SkeletonBlock lines={2} h={44} /><SkeletonBlock lines={4} /></>) : (
+      {!ready ? (<><Skeleton count={2} height={44} /><Skeleton count={4} /></>) : (
         <div className="space-y-3">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
             <Stat label="入住（窗口）" value={ins.length} hint="智能排房 · ≤5 分钟" />

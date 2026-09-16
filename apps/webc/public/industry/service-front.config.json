@@ -4,8 +4,8 @@
   "agentName": "小栖",
   "logoText": "栖",
   "theme": {
-    "primary": "#e9b558",
-    "secondary": "#45e0ff"
+    "primary": "#8A4B00",
+    "secondary": "#00627A"
   },
   "welcomeText": "您好，欢迎来到{brand}。我是智能服务前台{agent}，可以帮您查订单、叫送物、报维修，也可以解答酒店服务问题。",
   "quickReplies": [
@@ -94,7 +94,7 @@
     "bundleId": "hotel",
     "bundleVersion": "3.2.0",
     "contractVersion": "2.0.0",
-    "uiVersion": "0.1.0",
+    "uiVersion": "0.1.1",
     "manifestDigest": "b4090f29c61b024927541cf64b11b8857592d073aa6dfe784d629de5c6672524"
   }
 }

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { actionText } from "../../../lib/display";
 import { ensureDemoLogin, trpc } from "../../../lib/trpc";
 import { Bridge } from "../../../shell/Bridge";
-import { EmptyState, SkeletonBlock, SystemDivider } from "../../../components/hud";
+import { EmptyState, Skeleton, SystemDivider } from "../../../components/hud";
 import { Ev, fmtTime, PageHead, Row, Stat, Tag, Note } from "../components/Twin";
 import { actorText, clientIdentifierText, clientValueText } from "../labels";
 
@@ -53,7 +53,7 @@ export default function P13() {
           <button type="submit" className="whitespace-normal break-words rounded-lg border border-gline bg-card px-3 py-1.5 text-body text-gold">穿透</button>
         </form>
       } />
-      {!ready ? (<><SkeletonBlock lines={2} h={44} /><SkeletonBlock lines={4} /></>) : (
+      {!ready ? (<><Skeleton count={2} height={44} /><Skeleton count={4} /></>) : (
         <div className="space-y-3">
           <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
             <Stat label="订单确认（样本窗口）" value={confirms.length} hint="信息完整校验后自动确认" />

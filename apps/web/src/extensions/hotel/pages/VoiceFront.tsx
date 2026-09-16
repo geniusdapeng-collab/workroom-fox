@@ -5,7 +5,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ensureDemoLogin, trpc } from "../../../lib/trpc";
 import { Bridge } from "../../../shell/Bridge";
-import { EmptyState, SkeletonBlock, SystemDivider } from "../../../components/hud";
+import { EmptyState, Skeleton, SystemDivider } from "../../../components/hud";
 import { Ev, fmtTime, HBar, Note, PageHead, Row, Stat, Tag } from "../components/Twin";
 import { clientValueText } from "../labels";
 
@@ -54,7 +54,7 @@ export default function P16() {
   return (
     <Bridge right={rightPanel}>
       <PageHead title="智能语音前台" tag="来电服务" extra={<Tag tone="go">24 小时在线</Tag>} />
-      {!ready ? (<><SkeletonBlock lines={2} h={44} /><SkeletonBlock lines={4} /></>) : (
+      {!ready ? (<><Skeleton count={2} height={44} /><Skeleton count={4} /></>) : (
         <div className="space-y-3">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
             <Stat label="呼入（窗口）" value={calls.length} />
