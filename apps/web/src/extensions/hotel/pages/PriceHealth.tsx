@@ -8,7 +8,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ensureDemoLogin, trpc } from "../../../lib/trpc";
 import { Bridge } from "../../../shell/Bridge";
-import { EmptyState, SkeletonBlock, SystemDivider } from "../../../components/hud";
+import { EmptyState, Skeleton, SystemDivider } from "../../../components/hud";
 import { clientIdentifierText, clientValueText } from "../labels";
 
 interface Ev {
@@ -82,7 +82,7 @@ export default function P11() {
       </div>
 
       {!ready ? (
-        <><SkeletonBlock lines={2} h={44} /><SkeletonBlock lines={4} /></>
+        <><Skeleton count={2} height={44} /><Skeleton count={4} /></>
       ) : blocks.length === 0 && adjusts.length === 0 ? (
         <EmptyState title="全渠道健康" hint="倒挂与超售零告警。系统每 15 分钟巡检一次。" />
       ) : (

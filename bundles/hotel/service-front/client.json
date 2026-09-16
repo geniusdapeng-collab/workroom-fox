@@ -4,8 +4,8 @@
   "agentName": "小栖",
   "logoText": "栖",
   "theme": {
-    "primary": "#e9b558",
-    "secondary": "#45e0ff"
+    "primary": "#8A4B00",
+    "secondary": "#00627A"
   },
   "welcomeText": "您好，欢迎来到{brand}。我是智能服务前台{agent}，可以帮您查订单、叫送物、报维修，也可以解答酒店服务问题。",
   "quickReplies": [

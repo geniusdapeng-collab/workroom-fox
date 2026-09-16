@@ -11,7 +11,8 @@
   "release": {
     "appId": "com.geniusdapeng.workroomfox",
     "channel": "stable",
-    "artifactPrefix": "懂汇报的狐狸先生",
+    "artifactPrefix": "Workroom Fox",
+    "workflow": ".github/workflows/build-desktop.yml",
     "website": "apps/site"
   },
   "desktop": {
