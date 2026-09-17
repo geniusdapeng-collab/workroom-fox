@@ -4,7 +4,7 @@
   "role": "experiment",
   "displayName": "懂汇报的狐狸先生",
   "packageName": "workloom-hotel",
-  "repository": "geniusdapeng-collab/workroom-fox",
+  "repository": "workloom-ai/workroom-fox",
   "defaultBundle": "hotel",
   "demoWorkspaceSlug": "yunqi-hotel",
   "demoMemberNo": "MEM-001",

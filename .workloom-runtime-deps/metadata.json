@@ -3,7 +3,7 @@
   "product": {
     "productId": "workroom-fox",
     "role": "experiment",
-    "repository": "geniusdapeng-collab/workroom-fox",
+    "repository": "workloom-ai/workroom-fox",
     "includePlatformOps": false
   },
   "npmVersion": "11.17.0",
