@@ -118,7 +118,8 @@ export function FoxGuideBubble({
         className={`absolute -top-2 right-8 h-3 w-3 rotate-45 border-l border-t ${TONE[tone]}`}
       />
       <div
-        className={`min-w-0 rounded-2xl border px-4 py-3 shadow-lg backdrop-blur ${TONE[tone]}`}
+        // 窄屏限高：气泡本身可滚动，避免狐狸台词把员工卡整片遮住（移动端实测占屏 28%）
+        className={`min-w-0 max-h-[38vh] overflow-y-auto rounded-2xl border px-4 py-3 shadow-lg backdrop-blur ${TONE[tone]}`}
         onClick={() => setShown(text.length)}
         data-fox-bubble="true"
         data-fox-speaking={speaking ? "true" : "false"}

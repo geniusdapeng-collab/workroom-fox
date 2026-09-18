@@ -584,7 +584,8 @@ export function QuestlineOverlay({
         {!completed && (
           <footer className="min-w-0 rounded-2xl border border-gline/50 bg-panel/85 px-4 py-3">
             <div className="flex min-w-0 items-end gap-3">
-              <span className="shrink-0">
+              {/* 窄屏隐藏狐狸立绘、只留台词气泡：移动端把屏留给可点的卡片 */}
+              <span className="hidden shrink-0 sm:inline-flex">
                 <FoxGuide size={92} mood={mood} speaking />
               </span>
               <div className="min-w-0 flex-1">
