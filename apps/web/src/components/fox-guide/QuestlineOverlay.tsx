@@ -8,7 +8,7 @@
  *  - 随时"稍后再来"：进度在 useQuestline 里持久化，下次从同一关继续。
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Icon, clientChineseText } from "@workloom/ui";
+import { Icon, clientChineseText, useManagedSurface } from "@workloom/ui";
 import { ensureDemoLogin, trpc } from "../../lib/trpc";
 import { AudioEngine } from "../../audio/AudioEngine";
 import {
@@ -53,6 +53,8 @@ export interface QuestlineOverlayProps {
   onLightCard: (cardId: string) => void;
   onFact: (key: keyof QuestFacts, value: boolean) => void;
   onXp: (kind: "decided" | "dispatched" | "settled", times?: number) => void;
+  /** 记下首单线程号（持久化；第 5 关据此判定交付） */
+  onThreadId: (threadId: string | null) => void;
   onClearCelebration: () => void;
   onTrack: (name: string, payload?: Record<string, string | number | boolean>) => void;
 }
@@ -74,6 +76,7 @@ export function QuestlineOverlay({
   onLightCard,
   onFact,
   onXp,
+  onThreadId,
   onClearCelebration,
   onTrack,
 }: QuestlineOverlayProps) {
@@ -91,6 +94,31 @@ export function QuestlineOverlay({
   const [editNote, setEditNote] = useState("");
   const [mode, setMode] = useState<"normal" | "reject" | "edit">("normal");
   const [hintVisible, setHintVisible] = useState(false);
+
+  /* M3：无障碍与表面管理交给基座统一实现（Esc 关闭 / 焦点圈定 / 背景 inert / 焦点恢复） */
+  const surface = useManagedSurface<HTMLDivElement>({
+    open,
+    kind: "dialog",
+    onDismiss: onClose,
+    modal: true,
+    dismissOnEscape: true,
+    trapFocus: true,
+    focusOnOpen: true,
+    restoreFocusOnClose: true,
+  });
+
+  /* m4：引导层打开期间让织伴浮层让位（关闭后恢复用户原本的隐藏偏好） */
+  useEffect(() => {
+    if (!open || typeof window === "undefined") return;
+    let wasHidden = false;
+    try {
+      wasHidden = localStorage.getItem("loommate.hidden") === "1";
+    } catch { /* 隐私模式忽略 */ }
+    window.dispatchEvent(new CustomEvent("workloom:loommate-visibility", { detail: "hide" }));
+    return () => {
+      window.dispatchEvent(new CustomEvent("workloom:loommate-visibility", { detail: wasHidden ? "hide" : "show" }));
+    };
+  }, [open]);
 
   const cards = useMemo(() => {
     const primary = QUESTLINE.employees.slice(0, 3);
@@ -144,8 +172,32 @@ export function QuestlineOverlay({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, celebration.achievements.join(",")]);
 
+  /* S4a：首单线程号 = 本地派活结果 ∪ 持久化线程号；刷新/次日回来仍认得出那件活 */
+  const threadId = thread?.id ?? state.lastThreadId ?? null;
+
+  /* S4a-恢复：进入验收关但本地没有线程号时（例如在别处派的活），从服务端取最近一条本人线程 */
+  useEffect(() => {
+    if (!open || state.stage !== "review" || threadId) return;
+    let stopped = false;
+    void (async () => {
+      try {
+        await ensureDemoLogin();
+        const list = await trpc.threads.list.query() as Array<ThreadView & { created_by?: string }>;
+        if (stopped || list.length === 0) return;
+        const newest = list[0];
+        if (!newest?.id) return;
+        setThread(newest);
+        onThreadId(newest.id);
+        onTrack("questline.thread.adopted", { thread_id: newest.id });
+      } catch {
+        /* 取不到就保持"暂无可关联任务"的诚实态，不猜 */
+      }
+    })();
+    return () => { stopped = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, state.stage, threadId]);
+
   /* L5：任务状态轮询（真实事实，完成与否以服务端为准） */
-  const threadId = thread?.id ?? null;
   useEffect(() => {
     if (!open || state.stage !== "review" || !threadId) return;
     let stopped = false;
@@ -200,9 +252,17 @@ export function QuestlineOverlay({
         title: task.dispatchTitle,
         presetKey: task.ownerPresetKey,
         runImmediately: true,
-      }) as { kind?: string; question?: string; threadId?: string; status?: string };
+      }) as { kind?: string; question?: string; threadId?: string; status?: string; mode?: string };
       if (result.kind === "clarify") {
         setError(clientChineseText(result.question, "指令还不够具体，再补一句细节。"));
+        return;
+      }
+      // M4：首单必须是一件"可交付的活"。若被意图路由判成问答/单员工任务，
+      // 就不会有产出与验收，不能按"已派活"过关。
+      if (result.mode !== "quest") {
+        setError(result.mode === "ask"
+          ? "这句话被理解成了一次提问。首单需要一件有产出的活，例如「巡检今天的房态与渠道价格，产出异常清单」。"
+          : "这句话被理解成了单人任务，首单需要一件可交付的活（会走完整流程、留下产出与凭证）。换个说法再试。");
         return;
       }
       if (!result.threadId) {
@@ -210,6 +270,7 @@ export function QuestlineOverlay({
         return;
       }
       setDispatchedTaskId(task.id);
+      onThreadId(result.threadId);
       setThread({
         id: result.threadId,
         title: task.title,
@@ -310,6 +371,7 @@ export function QuestlineOverlay({
 
   return (
     <div
+      {...surface}
       className="fixed inset-0 z-40 overflow-y-auto bg-bg950/88 backdrop-blur-sm"
       data-questline-overlay="true"
       data-questline-stage={state.stage}
@@ -328,13 +390,23 @@ export function QuestlineOverlay({
             <span className="flex-1" />
             <span className="text-body text-ink3">董事长等级 {level.level} · {level.rank}</span>
             <span className="font-mono text-body text-goldhi">{xp} XP</span>
-            <button
-              type="button"
-              onClick={onClose}
-              className="min-h-8 rounded border border-line px-2 py-0.5 text-body text-ink3 hover:border-gline hover:text-ink"
-            >
-              稍后再来
-            </button>
+            {completed ? (
+              <button
+                type="button"
+                onClick={onClose}
+                className="min-h-8 rounded border border-line px-2 py-0.5 text-body text-ink3 hover:border-gline hover:text-ink"
+              >
+                关闭
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={onClose}
+                className="min-h-8 rounded border border-line px-2 py-0.5 text-body text-ink3 hover:border-gline hover:text-ink"
+              >
+                稍后再来
+              </button>
+            )}
           </div>
           <div className="mt-2 flex min-w-0 items-center gap-1.5">
             {QUEST_STAGE_ORDER.map((id, index) => {
@@ -369,7 +441,14 @@ export function QuestlineOverlay({
         {/* 关卡主体 */}
         <section className="min-w-0 rounded-2xl border border-line bg-card/95 px-4 py-4">
           {completed ? (
-            <CompletionPanel onNext={openNextStep} />
+            <div className="min-w-0 space-y-3">
+              <div className="mx-auto flex justify-center">
+                <FoxGuide size={104} mood="celebrate" />
+              </div>
+              <CompletionPanel onNext={openNextStep} />
+              {/* 完成时也要"开口"：既是收尾台词，也把字幕条刷新到当前这句话 */}
+              <FoxGuideBubble text={bubbleText} tone="gold" />
+            </div>
           ) : (
             <>
               <div className="mb-1 flex min-w-0 flex-wrap items-center gap-2">

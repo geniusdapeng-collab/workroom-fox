@@ -109,7 +109,9 @@ export interface QuestlineConfig {
 export const FOX_MATE_VOICE: VoiceProfile = {
   pitch: 0.92,
   rate: 0.98,
-  preferredNames: ["Eddy", "Reed", "Yunxi", "Yunjian", "云希", "云健", "李沐"],
+  // Eddy/Reed/Flo 一族在 zh-CN 下不出 boundary（口型不同步），由 VoiceEngine 降级兜底；
+  // 这里显式登记本机可用男声（Li-Mu / 云希 / 云健），保证狐狸先生与织伴在音色上分得开。
+  preferredNames: ["Eddy", "Reed", "Yunxi", "Yunjian", "云希", "云健", "李沐", "Li-Mu"],
 };
 
 export const QUESTLINE: QuestlineConfig = {

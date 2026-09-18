@@ -7,7 +7,6 @@
 import { Icon } from "@workloom/ui";
 import type { QuestLevel, QuestStageId } from "../../onboarding/questline";
 import { QUESTLINE, type TaskCardDef } from "../../onboarding/questline.config";
-import { FoxGuide } from "./FoxGuide";
 
 /** 待拍板事项视图（来自 P0 的真实审批队列，不是编造的示例） */
 export interface PendingApprovalView {
@@ -149,7 +148,7 @@ export function GoalStage({
           <div className="mt-1 break-words text-body text-ink2">衡量口径：{picked.metric}</div>
           <div className="mt-1 break-words text-body text-ink2">负责人：{picked.ownerTitle} · 首个产出：{picked.artifact}</div>
           <div className="mt-1 break-words text-body text-ink3">
-            预计 {picked.steps} 步，中途会找您拍板 {picked.approvals} 次；不涉及外发与资金的动作自动完成。
+            预估 {picked.steps} 步，中途会找您拍板 {picked.approvals} 次；不涉及外发与资金的动作自动完成。
           </div>
         </div>
       )}
@@ -183,7 +182,13 @@ export function DispatchStage({
     <div className="min-w-0 space-y-3">
       <div className="break-words rounded-lg border border-line bg-bg900/50 px-3 py-2 text-body text-ink3">
         派活走的是真实任务通道：派出去就有一条可查的任务线程，进度来自服务端，不伪造。
-        {!canDispatch && <span className="text-warn"> 当前角色没有派活权限，可以让店主账号来试。</span>}
+        {!canDispatch && (
+          <span className="text-warn">
+            {" "}当前角色没有派活权限。
+            {/* m6：别让客户卡在这——直接给出身份切换出口 */}
+            <a href="/login" className="ml-1 underline text-warn">切换到店主/店长身份 →</a>
+          </span>
+        )}
       </div>
       <div className="grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-3">
         {QUESTLINE.tasks.map((task) => {
@@ -197,10 +202,14 @@ export function DispatchStage({
               <div className="break-words text-body font-bold text-ink">{task.title}</div>
               <dl className="mt-2 space-y-0.5 text-body text-ink3">
                 <div>谁做：{task.ownerTitle}</div>
-                <div>几步：{task.steps} 步 · {task.eta}</div>
+                <div>几步：{task.steps} 步 · {task.eta}（预估）</div>
                 <div>产出：{task.artifact}</div>
-                <div>要您拍板：{task.approvals} 次 · 约 {task.credits} 积分</div>
+                <div>要您拍板：{task.approvals} 次 · 约 {task.credits} 积分（预估）</div>
               </dl>
+              {/* M5：步数/时长/积分是行业包的演示预估，不是承诺；真实计量以任务线程为准 */}
+              <div className="mt-1.5 break-words text-body text-ink3">
+                预估口径来自行业包演示配置；实际耗时与积分以任务线程里的模型计量为准。
+              </div>
               <button
                 type="button"
                 disabled={busy || done || !canDispatch}
@@ -278,13 +287,18 @@ export function ApproveStage({
       <div className="min-w-0 rounded-xl border border-amber-400/50 bg-amber-400/5 px-3 py-3">
         <div className="text-body tracking-widest text-amber-300">请您决策 · 1 件</div>
         <div className="mt-1 break-words text-body font-bold text-ink">{pending.title}</div>
-        {pending.rationale && (
+        {pending.rationale && pending.rationale !== "负责人意见待确认" && (
           <div className="mt-1 break-words text-body text-holo">负责人意见：{pending.rationale}</div>
         )}
         <div className="mt-2 break-words text-body text-ink3">
           命中航道：{pending.actionLabel ?? "高风险动作需人工拍板"}。批准后动作立即生效并写入账本；驳回必须选原因。
         </div>
-        {!canApprove && <div className="mt-1 break-words text-body text-warn">当前角色没有审批权限，可以让店主账号来试这一步。</div>}
+        {!canApprove && (
+          <div className="mt-1 break-words text-body text-warn">
+            当前角色没有审批权限。
+            <a href="/login" className="ml-1 underline">切换到店主/店长身份 →</a>
+          </div>
+        )}
       </div>
 
       {mode === "reject" && (
@@ -459,9 +473,6 @@ export function ReviewStage({
 export function CompletionPanel({ onNext }: { onNext: (to: string, id: string) => void }) {
   return (
     <div className="min-w-0 text-center" data-questline-complete="true">
-      <div className="mx-auto mb-2 flex justify-center">
-        <FoxGuide size={112} mood="celebrate" />
-      </div>
       <h2 className="break-words text-h1 font-black text-goldhi">首日上岗完成</h2>
       <p className="mx-auto mt-1 max-w-xl break-words text-body leading-relaxed text-ink2">
         您已经认识了团队、定了目标、派了第一单、拍了第一次板。接下来这三件事，随时可以做：

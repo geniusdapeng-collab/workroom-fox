@@ -39,6 +39,28 @@ export function FoxGuideBubble({
   const [shown, setShown] = useState(0);
   const [speaking, setSpeaking] = useState(false);
   const saidRef = useRef("");
+  const fallbackRef = useRef<number | null>(null);
+
+  /* m5：口型跟真实 TTS 走——订阅 VoiceEngine 的口型事件（start/boundary/end），
+     说话结束立即闭嘴；无语音降级时由上方的估算计时兜底。 */
+  useEffect(() => {
+    const off = VoiceEngine.onLipSync((ev) => {
+      if (ev.role !== "fox-guide") return;
+      if (ev.type === "end") {
+        setSpeaking(false);
+        if (fallbackRef.current !== null) {
+          window.clearTimeout(fallbackRef.current);
+          fallbackRef.current = null;
+        }
+      } else {
+        setSpeaking(true);
+      }
+    });
+    return () => {
+      off();
+      if (fallbackRef.current !== null) window.clearTimeout(fallbackRef.current);
+    };
+  }, []);
 
   /* 打字机 */
   useEffect(() => {
@@ -62,7 +84,11 @@ export function FoxGuideBubble({
     if (saidRef.current === text) return;
     saidRef.current = text;
     setSpeaking(true);
-    const timer = window.setTimeout(() => setSpeaking(false), Math.max(1600, text.length * 190));
+    // 估算时长只作兜底：真实 TTS 可用时由 onLipSync 的 end 事件提前收口
+    fallbackRef.current = window.setTimeout(() => {
+      setSpeaking(false);
+      fallbackRef.current = null;
+    }, Math.max(1600, text.length * 190));
     try {
       VoiceEngine.speak({
         role: "fox-guide",
@@ -74,7 +100,12 @@ export function FoxGuideBubble({
     } catch {
       /* 语音失败只影响"听"，不影响"看" */
     }
-    return () => window.clearTimeout(timer);
+    return () => {
+      if (fallbackRef.current !== null) {
+        window.clearTimeout(fallbackRef.current);
+        fallbackRef.current = null;
+      }
+    };
   }, [text, voice, priority]);
 
   const done = shown >= text.length;

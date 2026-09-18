@@ -26,7 +26,7 @@ import { ValueCounters } from "../../components/ValueCounters";
 import { QuestlineHud } from "../../components/fox-guide/QuestlineHud";
 import { QuestlineOverlay } from "../../components/fox-guide/QuestlineOverlay";
 import { useQuestline } from "../../onboarding/useQuestline";
-import { EMPTY_FACTS, type QuestFacts } from "../../onboarding/questline";
+import { EMPTY_FACTS, factsFromRecentActions, type QuestFacts } from "../../onboarding/questline";
 import { useTheaterDiff } from "../../lib/theaterDiff";
 import { displayNameOf, hydrateAliases, reportTitleOf, selectReporters } from "../../lib/naming";
 import { Link } from "react-router";
@@ -200,7 +200,7 @@ function TypeBubble({ text, tone }: { text: string; tone: string }) {
 
 /* ================= 主组件 ================= */
 export default function P0() {
-  const { bundle, entries, canAction } = useNavigationAccess();
+  const { bundle, entries, canAction, subject } = useNavigationAccess();
   const canDispatch = canAction("task.dispatch");
   const canApprove = canAction("approval.decide");
   const canReadApprovals = entries.some((entry) => entry.route === "/approvals");
@@ -245,13 +245,52 @@ export default function P0() {
 
   /* ---- 首日上岗（狐狸先生带玩）：进度本地持久化，关卡推进只认客户操作与真实事实 ---- */
   const [questFacts, setQuestFacts] = useState<QuestFacts>(EMPTY_FACTS);
+  const [serverXp, setServerXp] = useState<number | null>(null);
+  const memberNo = subject?.memberNo ?? null;
+  // S3：跨页面事实由剧场 ticker（近 14 条真实事件）推导——
+  // 3D 职场拖拽派活、AskRail 派活、审批中心拍板都能被认出来，而不是只认引导层里的动作。
+  const tickerFacts = useMemo(
+    () => factsFromRecentActions(
+      (data?.ticker ?? []).map((item) => ({ action: item.action, who: item.who })),
+      memberNo,
+    ),
+    [data?.ticker, memberNo],
+  );
   const questlineFacts = useMemo<QuestFacts>(
-    () => ({ ...questFacts, approvalsAvailable: queue.length > 0 }),
-    [questFacts, queue.length],
+    () => ({
+      ...questFacts,
+      dispatched: questFacts.dispatched || tickerFacts.dispatched,
+      decided: questFacts.decided || tickerFacts.decided,
+      approvalsAvailable: queue.length > 0,
+    }),
+    [questFacts, tickerFacts, queue.length],
   );
   // 欢迎仪式走完才算"起跑线"；中途暂停欢迎的客户仍可从左下角手动开始
   const questlineReady = Boolean(!showWelcome && welcome && welcome.status === "completed");
   const questline = useQuestline({ ready: questlineReady, facts: questlineFacts });
+  // M1：等级/XP 以团队页同源（roster 30 天事件投影）为准，避免同一屏出现两个"董事长等级"
+  useEffect(() => {
+    if (!questlineReady || !memberNo) return;
+    let stopped = false;
+    const loadXp = async () => {
+      try {
+        await ensureDemoLogin();
+        const roster = await trpc.roster.list.query() as { humans?: Array<{ memberNo: string; game?: { xp?: number } }> };
+        if (stopped) return;
+        const mine = (roster.humans ?? []).find((h) => h.memberNo === memberNo);
+        if (mine?.game && typeof mine.game.xp === "number") setServerXp(mine.game.xp);
+      } catch {
+        /* 取不到就不显示累计口径，退回本次会话 XP */
+      }
+    };
+    void loadXp();
+    const timer = window.setInterval(() => void loadXp(), 60_000);
+    return () => {
+      stopped = true;
+      window.clearInterval(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questlineReady, memberNo]);
   const markQuestFact = (key: keyof QuestFacts, value: boolean) => {
     setQuestFacts((current) => (current[key] === value ? current : { ...current, [key]: value }));
   };
@@ -720,6 +759,8 @@ export default function P0() {
           level={questline.level}
           xp={questline.xp}
           achievements={questline.state.achievements}
+          serverXp={serverXp}
+          completed={questline.state.status === "completed"}
           onOpen={questline.openQuestline}
         />
       )}
@@ -738,6 +779,7 @@ export default function P0() {
         onLightCard={questline.markCard}
         onFact={markQuestFact}
         onXp={questline.noteXp}
+        onThreadId={questline.setThreadId}
         onClearCelebration={questline.clearCelebration}
         onTrack={questline.track}
       />

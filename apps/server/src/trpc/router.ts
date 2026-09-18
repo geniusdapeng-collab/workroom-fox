@@ -3142,9 +3142,11 @@ const captainRouter = router({
         [scope.workspaceId],
       );
       // 展示层过滤：E2E 测试标记（E2E-*）写入的晨报不返回给界面（哈希链不动、套件断言不受影响——套件直接查库）
+      // COALESCE 兜住 after.text 为 NULL 的事件：SQL 里 NULL NOT LIKE 'x' 结果是 NULL，
+      // 会把整行判成"不满足"而丢掉（审计 S3 根因）。
       const briefing = await client.query<{ payload: Record<string, unknown>; created_at: string }>(
         `SELECT payload, created_at FROM biz_events WHERE workspace_id=$1 AND payload->'decision'->>'action' IN ('ceo.briefing','ceo.board_pack')
-         AND payload->'decision'->'after'->>'text' NOT LIKE '%E2E-%'
+         AND COALESCE(payload->'decision'->'after'->>'text','') NOT LIKE '%E2E-%'
          ORDER BY seq DESC LIMIT 1`,
         [scope.workspaceId],
       );
@@ -3162,11 +3164,13 @@ const captainRouter = router({
          ORDER BY 1, seq DESC`,
         [scope.workspaceId],
       );
-      // ticker 同口径过滤测试噪声（E2E 标记与套件 mock 数据不进界面）
+      // ticker 同口径过滤测试噪声（E2E 标记与套件 mock 数据不进界面）。
+      // 注意不能直接写 after->>'text' NOT LIKE ...：dispatch/approve 等事件没有 after.text，
+      // NULL 会让整行被丢掉，导致实况流只剩"带文本"的少数动作（审计 S3/一般缺陷）。
       const events = await client.query<{ event_id: string; action: string; who: string; created_at: string }>(
         `SELECT event_id, payload->'decision'->>'action' AS action, payload->'who'->>'id' AS who, created_at
          FROM biz_events WHERE workspace_id=$1
-         AND payload->'decision'->'after'->>'text' NOT LIKE '%E2E-%'
+         AND COALESCE(payload->'decision'->'after'->>'text','') NOT LIKE '%E2E-%'
          AND payload->'decision'->>'action' NOT LIKE 'test.%'
          ORDER BY seq DESC LIMIT 14`,
         [scope.workspaceId],

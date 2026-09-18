@@ -61,6 +61,11 @@ export interface QuestState {
   skipped: QuestStageId[];
   /** 已解锁成就 id */
   achievements: string[];
+  /**
+   * 首单线程号：用于第 5 关判定交付。
+   * 必须持久化——否则刷新/次日回来就认不出"那件活"，只能退回主观确认。
+   */
+  lastThreadId: string | null;
   xp: QuestXpTally;
   startedAt: number | null;
   completedAt: number | null;
@@ -93,11 +98,19 @@ export function createQuestState(now: number = Date.now()): QuestState {
     stageDone: [],
     skipped: [],
     achievements: [],
+    lastThreadId: null,
     xp: { decided: 0, dispatched: 0, settled: 0 },
     startedAt: null,
     completedAt: null,
     updatedAt: now,
   };
+}
+
+/** 记下首单线程号（幂等；空值忽略） */
+export function withThreadId(state: QuestState, threadId: string | null | undefined, now: number = Date.now()): QuestState {
+  const id = (threadId ?? "").trim();
+  if (!id || state.lastThreadId === id) return state;
+  return { ...state, lastThreadId: id, updatedAt: now };
 }
 
 export function stageIndex(stage: QuestStageId): number {
@@ -236,15 +249,20 @@ export function stageSatisfiedByFacts(stage: QuestStageId, facts: QuestFacts): b
     case "approve":
       return facts.decided;
     case "review":
-      return facts.delivered;
+      // 验收必须由客户自己看完（交付卡 + 成绩单）再点确认：
+      // 若用事实自动关掉这一关，客户会在"秒级完成"的演示环境里直接跳到完成面板，
+      // 永远看不到成绩单与成就墙（审计 D7）。交付事实仍决定交付卡内容与"首次闭环"成就。
+      return false;
     default:
       return false;
   }
 }
 
 /**
- * 按真实事实自动推进：用于"客户在别处把活干了"的场景（例如直接在 3D 职场派活、
- * 在审批中心拍板、任务在后台跑完）。最多推进到最后一关，不越过未满足的关卡。
+ * 按真实事实自动推进：覆盖"客户在别处把活干了"的场景——P0 从剧场 ticker
+ * （近 14 条真实事件）推导 `thread.dispatch` / `approval.gesture` 是否由本人发出，
+ * 因此 3D 职场拖拽派活、AskRail 派活、审批中心拍板都能被认出来。
+ * 认人（meet）与验收（review）必须由客户本人确认，事实不能代劳。
  */
 export function autoAdvance(state: QuestState, facts: QuestFacts, now: number = Date.now()): QuestState {
   let current = state.status === "idle" && hasAnyFact(facts) ? startQuestline(state, now) : state;
@@ -259,6 +277,34 @@ export function autoAdvance(state: QuestState, facts: QuestFacts, now: number = 
 
 function hasAnyFact(facts: QuestFacts): boolean {
   return facts.goalConfirmed || facts.dispatched || facts.decided || facts.delivered;
+}
+
+export interface QuestActionRow {
+  action: string;
+  /** 事件 who.id（人类身份是 memberNo，例如 MEM-001） */
+  who: string;
+}
+
+/**
+ * 从"最近动作"推导跨页面事实。
+ *
+ * 数据源：`captain.theater().ticker`（服务端已过滤测试噪声，近 14 条真实事件）。
+ * 纪律：只认本人（who === memberNo）发出的动作；认不出就不推进，绝不猜测。
+ */
+export function factsFromRecentActions(
+  rows: readonly QuestActionRow[] | null | undefined,
+  memberNo: string | null | undefined,
+): Pick<QuestFacts, "dispatched" | "decided"> {
+  const me = (memberNo ?? "").trim();
+  if (!me || !Array.isArray(rows) || rows.length === 0) return { dispatched: false, decided: false };
+  let dispatched = false;
+  let decided = false;
+  for (const row of rows) {
+    if (!row || typeof row.action !== "string" || row.who !== me) continue;
+    if (row.action === "thread.dispatch") dispatched = true;
+    if (row.action === "approval.gesture") decided = true;
+  }
+  return { dispatched, decided };
 }
 
 export interface QuestProgressSummary {
@@ -318,6 +364,9 @@ export function parseQuestState(raw: string | null | undefined, now: number = Da
     achievements: Array.isArray(record.achievements)
       ? uniqueStrings(record.achievements.filter((item): item is string => typeof item === "string" && item.length > 0))
       : [],
+    lastThreadId: typeof record.lastThreadId === "string" && record.lastThreadId.trim().length > 0
+      ? record.lastThreadId.trim()
+      : null,
     xp: {
       decided: xpNumber(xpRecord.decided),
       dispatched: xpNumber(xpRecord.dispatched),

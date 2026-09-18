@@ -6,6 +6,7 @@ import {
   completeStage,
   computeXp,
   createQuestState,
+  factsFromRecentActions,
   levelOf,
   lightCard,
   parseQuestState,
@@ -15,6 +16,7 @@ import {
   stageSatisfiedByFacts,
   startQuestline,
   unlockAchievements,
+  withThreadId,
   type QuestFacts,
 } from "./questline";
 import { QUESTLINE, stageDef } from "./questline.config";
@@ -100,7 +102,7 @@ describe("事实驱动推进", () => {
     expect(autoAdvance(started, facts(), 10).stage).toBe("meet");
   });
 
-  it("五个事实齐了会一路推到完成", () => {
+  it("五个事实齐了会推到验收关，但验收必须由客户亲自确认（S4b）", () => {
     const started = completeStage(startQuestline(createQuestState(0), 0), "meet", 5);
     const advanced = autoAdvance(started, facts({
       goalConfirmed: true,
@@ -108,8 +110,35 @@ describe("事实驱动推进", () => {
       decided: true,
       delivered: true,
     }), 10);
-    expect(advanced.status).toBe("completed");
+    // 交付事实已满足，但 review 关不允许被事实自动关掉——否则客户看不到成绩单
+    expect(advanced.stage).toBe("review");
+    expect(advanced.status).toBe("running");
     expect(advanced.stageDone).toContain("meet");
+    // 客户点"我看到了"之后才算完成
+    expect(completeStage(advanced, "review", 20).status).toBe("completed");
+  });
+
+  it("跨页面事实只认本人动作，认不出就不推进（S3）", () => {
+    expect(factsFromRecentActions([
+      { action: "thread.dispatch", who: "MEM-001" },
+      { action: "approval.gesture", who: "MEM-001" },
+    ], "MEM-001")).toEqual({ dispatched: true, decided: true });
+    // 别人的动作不算我的
+    expect(factsFromRecentActions([{ action: "thread.dispatch", who: "MEM-002" }], "MEM-001"))
+      .toEqual({ dispatched: false, decided: false });
+    // 无身份 / 空数据一律不推进
+    expect(factsFromRecentActions([{ action: "thread.dispatch", who: "MEM-001" }], null))
+      .toEqual({ dispatched: false, decided: false });
+    expect(factsFromRecentActions([], "MEM-001")).toEqual({ dispatched: false, decided: false });
+  });
+
+  it("首单线程号可持久化并幂等写入（S4a）", () => {
+    const once = withThreadId(createQuestState(0), "T-107", 10);
+    expect(once.lastThreadId).toBe("T-107");
+    expect(withThreadId(once, "T-107", 20)).toBe(once);
+    expect(withThreadId(once, "  ", 30).lastThreadId).toBe("T-107");
+    expect(parseQuestState(serializeQuestState(once), 99).lastThreadId).toBe("T-107");
+    expect(parseQuestState(JSON.stringify({ version: 1 }), 1).lastThreadId).toBeNull();
   });
 });
 

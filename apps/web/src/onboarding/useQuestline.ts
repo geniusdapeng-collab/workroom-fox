@@ -24,6 +24,7 @@ import {
   skipStage,
   startQuestline,
   unlockAchievements,
+  withThreadId,
   type QuestFacts,
   type QuestLevel,
   type QuestProgressSummary,
@@ -88,6 +89,8 @@ export interface QuestlineApi {
   completeCurrent: () => void;
   skipCurrent: () => void;
   markCard: (cardId: string) => void;
+  /** 记下首单线程号（派活成功后调用；持久化，供第 5 关判定交付） */
+  setThreadId: (threadId: string | null) => void;
   noteXp: (kind: XpKind, times?: number) => void;
   clearCelebration: () => void;
   reset: () => void;
@@ -112,6 +115,10 @@ export function useQuestline({ ready, facts }: UseQuestlineOptions): QuestlineAp
   const [celebration, setCelebration] = useState<QuestCelebration>({ achievements: [], stage: null });
   const factsRef = useRef(facts);
   factsRef.current = facts;
+  const stateRef = useRef(state);
+  stateRef.current = state;
+  /** 上一次已记账的状态：用于在 updater 之外做"差异 → 埋点/庆祝"（StrictMode 安全） */
+  const bookedRef = useRef<QuestState | null>(null);
   const factsKey = useMemo(() => [
     facts.goalConfirmed ? "g" : "-",
     facts.dispatched ? "d" : "-",
@@ -134,35 +141,26 @@ export function useQuestline({ ready, facts }: UseQuestlineOptions): QuestlineAp
     }
   }, [state]);
 
-  /* ---------- 起跑：欢迎仪式结束后自动开始 ---------- */
+  /* ---------- 起跑：欢迎仪式结束后自动开始（已完成则不再自动弹） ---------- */
   useEffect(() => {
     if (!ready) return;
-    setState((current) => {
-      if (current.status !== "idle") return current;
-      track("questline.started", { journey_version: current.version, from: "welcome" });
-      return startQuestline(current);
-    });
+    // 完成态只在 HUD 提供"重播"入口；自动弹层只服务"还没走完"的客户，
+    // 否则每次进首页都会被引导层拦一次（审计 S1）。
+    if (stateRef.current.status === "completed") return;
+    setState((current) => startQuestline(current));
     setOpen(true);
-    // 仅以 ready 是否到位的边沿触发，避免重复埋点
+    // 仅以 ready 是否到位的边沿触发
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready]);
 
-  /* ---------- 事实驱动推进 ---------- */
+  /* ---------- 事实驱动推进（纯 updater） ---------- */
   useEffect(() => {
-    setState((current) => {
-      const before = current.stage;
-      const next = autoAdvance(current, factsRef.current);
-      if (next !== current && next.stage !== before) {
-        track("questline.stage.auto_advanced", { from: before, to: next.stage });
-        setCelebration((prev) => ({ ...prev, stage: before }));
-      }
-      return next;
-    });
+    setState((current) => autoAdvance(current, factsRef.current));
     // factsKey 是 facts 的稳定指纹；用字符串依赖避免每帧重算
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [factsKey]);
 
-  /* ---------- 成就解锁（只认事实与客户操作） ---------- */
+  /* ---------- 成就解锁（只认事实与客户操作；纯 updater） ---------- */
   useEffect(() => {
     const desired: string[] = [];
     if (ready) desired.push("aboard");
@@ -171,45 +169,62 @@ export function useQuestline({ ready, facts }: UseQuestlineOptions): QuestlineAp
     if (facts.dispatched || state.stageDone.includes("dispatch")) desired.push("first-dispatch");
     if (facts.decided || state.stageDone.includes("approve")) desired.push("first-decision");
     if (facts.delivered || state.stageDone.includes("review")) desired.push("first-close");
-
-    setState((current) => {
-      const { state: next, unlocked } = unlockAchievements(current, desired);
-      if (unlocked.length === 0) return current;
-      for (const id of unlocked) track("questline.achievement.unlocked", { achievement_id: id });
-      setCelebration((prev) => ({ ...prev, achievements: [...prev.achievements, ...unlocked] }));
-      return next;
-    });
+    setState((current) => unlockAchievements(current, desired).state);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready, factsKey, state.litCards, state.stageDone]);
+  }, [ready, factsKey, state.litCards.join(","), state.stageDone.join(",")]);
+
+  /* ---------- 状态差异 → 埋点与庆祝（副作用留在 updater 之外，StrictMode 不会重复记账） ---------- */
+  useEffect(() => {
+    const previous = bookedRef.current;
+    if (!previous) {
+      bookedRef.current = state;
+      return;
+    }
+    if (previous === state) return;
+    if (previous.status === "idle" && state.status !== "idle") {
+      track("questline.started", { journey_version: state.version, from: "welcome" });
+    }
+    const doneAdded = state.stageDone.filter((id) => !previous.stageDone.includes(id));
+    for (const stage of doneAdded) track("questline.step.completed", { stage, next: state.stage, status: state.status });
+    const skippedAdded = state.skipped.filter((id) => !previous.skipped.includes(id));
+    for (const stage of skippedAdded) track("questline.step.skipped", { stage, next: state.stage });
+    const cardsAdded = state.litCards.filter((id) => !previous.litCards.includes(id));
+    for (const cardId of cardsAdded) track("questline.card.lit", { card_id: cardId, total: state.litCards.length });
+    const achievementsAdded = state.achievements.filter((id) => !previous.achievements.includes(id));
+    for (const id of achievementsAdded) track("questline.achievement.unlocked", { achievement_id: id });
+    if (previous.status !== "completed" && state.status === "completed") {
+      track("questline.completed", { skipped: state.skipped.length });
+    }
+    if (previous.status !== "idle" && state.status === "idle" && state.stageDone.length === 0 && previous.stageDone.length > 0) {
+      track("questline.reset");
+    }
+    if (previous.stage !== state.stage) track("questline.stage.auto_advanced", { from: previous.stage, to: state.stage });
+    if (achievementsAdded.length > 0 || previous.stage !== state.stage) {
+      setCelebration((current) => ({
+        achievements: [...current.achievements, ...achievementsAdded],
+        stage: previous.stage !== state.stage ? previous.stage : current.stage,
+      }));
+    }
+    bookedRef.current = state;
+  }, [state, track]);
 
   /* ---------- 客户操作 ---------- */
   const completeCurrent = useCallback(() => {
-    setState((current) => {
-      const stage = current.stage;
-      const next = completeStage(current, stage);
-      track("questline.step.completed", { stage, next: next.stage, status: next.status });
-      setCelebration((prev) => ({ ...prev, stage }));
-      if (next.status === "completed") track("questline.completed", { skipped: next.skipped.length });
-      return next;
-    });
-  }, [track]);
+    setState((current) => completeStage(current, current.stage));
+  }, []);
 
   const skipCurrent = useCallback(() => {
-    setState((current) => {
-      const stage = current.stage;
-      const next = skipStage(current, stage);
-      track("questline.step.skipped", { stage, next: next.stage });
-      return next;
-    });
-  }, [track]);
+    setState((current) => skipStage(current, current.stage));
+  }, []);
 
   const markCard = useCallback((cardId: string) => {
-    setState((current) => {
-      const next = lightCard(current, cardId);
-      if (next !== current) track("questline.card.lit", { card_id: cardId, total: next.litCards.length });
-      return next;
-    });
-  }, [track]);
+    setState((current) => lightCard(current, cardId));
+  }, []);
+
+  /** 记下首单线程号：第 5 关据此判定交付（刷新/次日回来仍认得出那件活） */
+  const setThreadId = useCallback((threadId: string | null) => {
+    setState((current) => withThreadId(current, threadId));
+  }, []);
 
   const noteXp = useCallback((kind: XpKind, times = 1) => {
     setState((current) => bumpXp(current, kind, times));
@@ -246,6 +261,7 @@ export function useQuestline({ ready, facts }: UseQuestlineOptions): QuestlineAp
     completeCurrent,
     skipCurrent,
     markCard,
+    setThreadId,
     noteXp,
     clearCelebration: useCallback(() => setCelebration({ achievements: [], stage: null }), []),
     reset,

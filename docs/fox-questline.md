@@ -62,3 +62,35 @@ XP 口径与团队页 `roster` 完全一致：裁决×3 + 派遣×2 + 沉淀×5�
 2. `questline.config.ts` 的内容迁到行业包 `bundles/<industry>/onboarding/*.yml`，
    由 `industry-contract` 增加 `onboarding?: BundleAssetPath`（契约 2.0.0 → 2.1.0）；
 3. 本地漏斗埋点改为写入五元事件账本，供平台侧看板消费。
+
+## 7. 2026-09-18 深度审计与修复
+
+审计发现的 17 项问题已修复并复验（详见 `outputs/FOX-数字人-首日上岗深度审计报告.md`）：
+
+| 编号 | 问题 | 修复 |
+|---|---|---|
+| B1 | 欢迎仪式永久卡在 `dance`（继承基座）：进入 entrance 时挂的 3 个定时器，phase 一变就被 cleanup 清掉 | 改为"每段只挂下一跳"（1.6s/7.0s/8.4s 节奏不变）+ 函数式 setPhase 防回拨 |
+| S1 | 已完成仍每次进首页自动弹引导层 | 完成态不再自动弹；HUD 提供"重播" |
+| S2 | <640px 无引导入口 | HUD 全尺寸可见（窄屏紧凑形态） |
+| S3 | "事实驱动"只认引导层内动作 | P0 从 `captain.theater().ticker`（近 14 条真实事件）推导本人 `thread.dispatch`/`approval.gesture`；并修掉服务端 ticker 的 `NULL NOT LIKE` 丢行缺陷 |
+| S4 | 线程号不持久化 + 第 5 关成绩单被事实短路 | 新增 `lastThreadId` 持久化 + 无线程时从 `threads.list` 认领；`review` 关改为必须客户确认（成绩单/成就墙必现） |
+| M1 | 引导 XP 与服务端 roster 双账本 | HUD 以服务端 roster XP 为主（"累计 N XP"），本次会话 XP 作副标 |
+| M2 | StrictMode 下埋点重复（1 次动作记 2 条） | 副作用移出 `setState` updater，改为状态差异 effect 统一记账 |
+| M3 | 无障碍：无初始焦点/Esc 不关闭/无焦点陷阱/背景可交互 | 接入基座 `useManagedSurface`（dialog + modal + Esc + 焦点圈定与恢复 + 背景 inert） |
+| M4 | 派活未校验路由模式 | 要求 `mode === "quest"`，否则给出人话说明且不推进 |
+| M5 | 任务预告数字无来源且未标注 | 标注"（预估）"并加"以任务线程模型计量为准"的说明 |
+| M6 | 差评口径 2h vs 24h 并存 | 引导目标改用行业包 R19 口径（24 小时） |
+| m1 | 埋点事件数声明 9 实际 16 | 本文件与方案文档更新为实际清单（hook 8 + 组件 6 = 14 个事件名，另含 opened/closed） |
+| m2 | 完成面板仍留"稍后再来"、字幕残留上一关 | 完成态按钮改"关闭"；完成面板补狐狸成功台词气泡（字幕随之刷新） |
+| m3 | "负责人意见：负责人意见待确认"重复 | 无真实意见时不渲染该行 |
+| m4 | 引导层与织伴浮层互相遮挡 | 引导期通过 `workloom:loommate-visibility` 让织伴让位，关闭后恢复用户原偏好 |
+| m5 | 狐狸口型是固定 CSS 循环，未接 TTS | 订阅 `VoiceEngine.onLipSync`（start/end 驱动说话态），估算时长仅作无语音兜底 |
+| m6 | 游客跑到 L3 卡权限、无身份出口 | 权限提示内直接给"切换到店主/店长身份 →"入口 |
+
+### 语音可用性（真机 Electron 实测）
+
+`VoiceEngine` 新增 `DEGRADED_VOICE_RE` / `selectVoice`：macOS 的 Eddy/Reed/Flo/Sandy/Shelley/Rocko/Grandma/Grandpa
+在 zh-CN 下**能出声但不发 `onboundary`**（同一句：它们 0 次，婷婷 15 次、Li-Mu 13 次），
+而基座口型同步依赖 boundary。修复后：**狐狸先生 → Li-Mu（男声，13 次 boundary）／织伴 → 婷婷（15 次）**，
+两人音色与织伴挂件（sweet → 婷婷 + pitch 1.25）不再互相糊在一起。
+试听样本：`outputs/voice-samples/{fox-l1,fox-l4,fox-done,mate-intro}.m4a`。
