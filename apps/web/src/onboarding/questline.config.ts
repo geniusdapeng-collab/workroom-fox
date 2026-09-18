@@ -107,8 +107,10 @@ export interface QuestlineConfig {
 
 /** 狐狸先生音色：沉稳、比织伴略低略慢，避免两个角色在字幕条上被认成同一个人 */
 export const FOX_MATE_VOICE: VoiceProfile = {
-  pitch: 0.92,
-  rate: 0.98,
+  // 与织伴（pitch 1.04 / rate 0.94）拉开辨识度：汇报官更低更慢，客户盲听能分清两个人。
+  // 本机实测 zh-CN 可用男声只有 Li-Mu（Eddy/Reed/Flo 一族无 boundary，已由 VoiceEngine 降级兜底）。
+  pitch: 0.86,
+  rate: 0.94,
   // Eddy/Reed/Flo 一族在 zh-CN 下不出 boundary（口型不同步），由 VoiceEngine 降级兜底；
   // 这里显式登记本机可用男声（Li-Mu / 云希 / 云健），保证狐狸先生与织伴在音色上分得开。
   preferredNames: ["Eddy", "Reed", "Yunxi", "Yunjian", "云希", "云健", "李沐", "Li-Mu"],
