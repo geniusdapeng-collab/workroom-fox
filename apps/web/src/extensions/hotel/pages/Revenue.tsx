@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { ensureDemoLogin, trpc } from "../../../lib/trpc";
 import { Bridge } from "../../../shell/Bridge";
 import { Skeleton, SystemDivider } from "../../../components/hud";
-import { HBar, Note, PageHead, Tag } from "../components/Twin";
+import { HBar, HotelStatusTag, Note, PageHead } from "../components/Twin";
 import { clientIdentifierText, clientValueText } from "../labels";
 
 type Q = "channel_revenue" | "occ_trend" | "price_attribution";
@@ -48,7 +48,7 @@ export default function P19() {
 
   return (
     <Bridge right={rightPanel}>
-      <PageHead title="收益分析" tag="经营问数" extra={<Tag tone="holo">问数即答</Tag>} />
+      <PageHead title="收益分析" tag="经营问数" extra={<HotelStatusTag tone="holo">问数即答</HotelStatusTag>} />
       <div className="mb-3 flex flex-wrap gap-2">
         {QUESTIONS.map((x) => (
           <button key={x.key} type="button" onClick={() => setQ(x.key)}
@@ -57,7 +57,7 @@ export default function P19() {
           </button>
         ))}
       </div>
-      {!ready || !result ? (<><Skeleton count={2} height={44} /><Skeleton count={4} /></>) : (
+      {!ready || !result ? (<><Skeleton count={2} height={44} variant="card" /><Skeleton count={4} /></>) : (
         <div className="space-y-3">
           {q === "channel_revenue" && (
             <>
@@ -86,7 +86,7 @@ export default function P19() {
                   <span className="font-mono text-body text-ink3">{String(r.time).slice(5, 16)}</span>
                   <span className="break-words text-ink2">{clientIdentifierText(r.object, "房型")}</span>
                   <span className="font-mono text-ink3">¥{String(r.before)} → <b className="text-gold">¥{String(r.after)}</b></span>
-                  <Tag tone="holo">{clientValueText(r.rule, "围栏已判定")}</Tag>
+                  <HotelStatusTag tone="holo">{clientValueText(r.rule, "围栏已判定")}</HotelStatusTag>
                   <span className="min-w-0 flex-[1_1_16rem] break-words text-right text-body text-ink3">{Array.isArray(r.basis) ? clientValueText((r.basis as string[])[0], "已记录调价依据") : ""}</span>
                 </div>
               ))}

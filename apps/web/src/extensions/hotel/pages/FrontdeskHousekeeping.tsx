@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ensureDemoLogin, trpc } from "../../../lib/trpc";
 import { Bridge } from "../../../shell/Bridge";
 import { EmptyState, Skeleton, SystemDivider } from "../../../components/hud";
-import { Ev, fmtTime, HBar, Note, PageHead, Row, Stat, Tag } from "../components/Twin";
+import { Ev, fmtTime, HBar, HotelStatusTag, Note, PageHead, Row, Stat } from "../components/Twin";
 import { clientIdentifierText, fieldLabel, clientValueText } from "../labels";
 
 interface Linen {
@@ -52,7 +52,7 @@ export default function P17() {
   return (
     <Bridge right={rightPanel}>
       <PageHead title="前厅与客房" tag="入退、派单与布草" />
-      {!ready ? (<><Skeleton count={2} height={44} /><Skeleton count={4} /></>) : (
+      {!ready ? (<><Skeleton count={2} height={44} variant="card" /><Skeleton count={4} /></>) : (
         <div className="space-y-3">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
             <Stat label="入住（窗口）" value={ins.length} hint="智能排房 · ≤5 分钟" />
@@ -63,7 +63,7 @@ export default function P17() {
 
           <SystemDivider time="入退与排房" summary="画像 × 房况避坑排房（历史/会员/特殊需求 × 楼层/朝向/噪音/相邻房）" />
           {[...ins.slice(0, 6), ...outs.slice(0, 4)].sort((a, b) => +new Date(b.context.time) - +new Date(a.context.time)).map((ev) => (
-            <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<Tag tone={ev.decision.action === "pms.checkin" ? "holo" : "go"}>{ev.decision.action === "pms.checkin" ? "入住" : "退房"}</Tag>}>
+            <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<HotelStatusTag tone={ev.decision.action === "pms.checkin" ? "holo" : "go"}>{ev.decision.action === "pms.checkin" ? "入住" : "退房"}</HotelStatusTag>}>
               <b className="text-ink2">{clientIdentifierText(ev.object.id)}</b>
               <span className="text-ink3"> · {clientValueText(ev.decision.basis?.[0])}</span>
             </Row>
@@ -71,7 +71,7 @@ export default function P17() {
 
           <SystemDivider time="客房派单（按预抵紧急度排序）" summary="清单化清洁 · 拍照智能初检全量（非抽查）· 异常自动返工闭环" />
           {tasks.slice(0, 10).map((ev) => (
-            <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<Tag tone={ev.decision.after?.photo_check === "pass" ? "go" : "warn"}>{ev.decision.after?.photo_check === "pass" ? "智能初检通过" : "返工"}</Tag>}>
+            <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<HotelStatusTag tone={ev.decision.after?.photo_check === "pass" ? "go" : "warn"}>{ev.decision.after?.photo_check === "pass" ? "智能初检通过" : "返工"}</HotelStatusTag>}>
               <b className="text-ink2">{clientIdentifierText(ev.decision.after?.room ?? ev.object.id, "客房未记录")}</b>
               <span className="break-words text-ink3"> · 工单 {clientIdentifierText(ev.object.id)} · 用时 {String(ev.decision.after?.minutes ?? "—")} 分钟</span>
             </Row>
@@ -83,7 +83,7 @@ export default function P17() {
             <HBar key={k} label={fieldLabel(k)} pct={Math.min(100, Math.round((v / 360) * 100))} value={`${v} 件`} />
           ))}
           {losses.map((ev) => (
-            <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<Tag tone="warn">损耗异常须审批</Tag>}>
+            <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<HotelStatusTag tone="warn">损耗异常须审批</HotelStatusTag>}>
               <b className="text-ink2">{clientValueText(ev.decision.params?.item, "布草")}</b>
               <span className="text-ink3"> · 损耗率 {(Number(ev.decision.params?.loss_rate ?? 0) * 100).toFixed(1)}%（基线 {(Number(ev.decision.params?.baseline_loss_rate ?? 0) * 100).toFixed(0)}%）· {clientValueText(ev.decision.after?.heatmap)}</span>
             </Row>

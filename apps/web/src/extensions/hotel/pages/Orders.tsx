@@ -7,7 +7,7 @@ import { actionText } from "../../../lib/display";
 import { ensureDemoLogin, trpc } from "../../../lib/trpc";
 import { Bridge } from "../../../shell/Bridge";
 import { EmptyState, Skeleton, SystemDivider } from "../../../components/hud";
-import { Ev, fmtTime, PageHead, Row, Stat, Tag, Note } from "../components/Twin";
+import { Ev, fmtTime, HotelStatusTag, Note, PageHead, Row, Stat } from "../components/Twin";
 import { actorText, clientIdentifierText, clientValueText } from "../labels";
 
 const rightPanel = (
@@ -53,7 +53,7 @@ export default function P13() {
           <button type="submit" className="whitespace-normal break-words rounded-lg border border-gline bg-card px-3 py-1.5 text-body text-gold">穿透</button>
         </form>
       } />
-      {!ready ? (<><Skeleton count={2} height={44} /><Skeleton count={4} /></>) : (
+      {!ready ? (<><Skeleton count={2} height={44} variant="card" /><Skeleton count={4} /></>) : (
         <div className="space-y-3">
           <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
             <Stat label="订单确认（样本窗口）" value={confirms.length} hint="信息完整校验后自动确认" />
@@ -76,7 +76,7 @@ export default function P13() {
                     <span className="font-mono text-ink3">{fmtTime(ev.context.time)}</span>
                     <span className="mx-2 font-semibold text-ink2">{actionText(ev.decision.action)}</span>
                     <span className="break-words text-ink3">{actorText(ev.who)}</span>
-                    {ev.rule_impact?.[0] ? <span className="ml-2"><Tag tone="holo">{clientValueText(ev.rule_impact[0].rule_id, "围栏规则")} · {clientValueText(ev.rule_impact[0].result, "已判定")}</Tag></span> : null}
+                    {ev.rule_impact?.[0] ? <span className="ml-2"><HotelStatusTag tone="holo">{clientValueText(ev.rule_impact[0].rule_id, "围栏规则")} · {clientValueText(ev.rule_impact[0].result, "已判定")}</HotelStatusTag></span> : null}
                     {ev.decision.basis?.[0] ? <div className="mt-0.5 break-words text-body text-ink3">{clientValueText(ev.decision.basis[0], "已记录决策依据")}</div> : null}
                   </div>
                 </div>

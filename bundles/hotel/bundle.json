@@ -330,7 +330,7 @@
   },
   "integrity": {
     "algorithm": "sha256",
-    "digest": "b4090f29c61b024927541cf64b11b8857592d073aa6dfe784d629de5c6672524",
+    "digest": "3f0ea5dd6d0a5465b5de8505af1ad7e354a069a1884579f9f9ebe6bff08d8321",
     "assets": {
       "fences/hotel-baseline.yml": "d7efd96728392b07cdcc71ccdbcaf55535ca0365d30f813d7c417138bbfae1d0",
       "fences/patches/audit-only-patch.yml": "d16e0a3c4a6d1ddb919d48abfbcdaeb33db2a0fe614cf02f95d6a59977b0d514",
@@ -352,7 +352,7 @@
       "schemas/objects.json": "80590ec7de38ef3bb7338b327aff59c753311590a7a7679e8cde84d635c7504c",
       "schemas/stages.json": "a5ab6830c3c2bc22d7661f168c0a21447b675df2d65feb3a30eeb5c4acad9118",
       "segment-defaults.yml": "7c98dacfc8ba7b65c6a928a1e74e64e644a0184c025e05ade3e99b4ddcd0b18c",
-      "service-front/client.json": "ac201c5fc58fac69dc75c214319aa7af120b2a0446880cd69eea8b516f34283e",
+      "service-front/client.json": "21c98032eade19c1a81a6875e402c97420f3a6197657c326bbb9d71229fb2d38",
       "skills/ai-live-assistant/SKILL.md": "e2a6a48127842c6af5182b3610f50cfdfdd0d4deacbe3dbc29112f27eac88d0f",
       "skills/channel-reconciler/SKILL.md": "34a5e0ffa505a7535a3522ba925b6762c756164cb605ac72862a348b2239fd4b",
       "skills/checkin-checkout/SKILL.md": "4979be37b2d0515e46fbe2116edd93d76252ca6d84226e9cca46c9211cf33d58",

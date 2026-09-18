@@ -1248,6 +1248,26 @@ async function main(): Promise<void> {
      ON CONFLICT (workspace_id, member_id) DO NOTHING`,
     [WS_ID],
   );
+  // C 端服务前台契约夹具：行业适配器按手机号绑定会员身份（demo_members.phone），
+  // 缺手机号会让 /identity/bind 失败关闭、/orders、/member 与 chat 业务查询整条断链。
+  // 这组夹具同时是所有 e2e 与契约用例的基准（M-1001/M-1002）。
+  await svcQ(
+    `INSERT INTO demo_members (workspace_id, member_id, name, phone, tier, points)
+     VALUES
+       ($1, 'M-1001', '张伟', '13800000001', '金卡', 2680),
+       ($1, 'M-1002', '刘芳', '13800000002', '银卡', 860)
+     ON CONFLICT (workspace_id, member_id) DO UPDATE SET phone=EXCLUDED.phone`,
+    [WS_ID],
+  );
+  await svcQ(
+    `INSERT INTO demo_orders (workspace_id, order_id, member_id, room_type, check_in, check_out, amount_fen, status)
+     VALUES
+       ($1, 'O-20260820-001', 'M-1001', '豪华大床房', '2026-08-21', '2026-08-23', 117600, '已确认'),
+       ($1, 'O-20260818-002', 'M-1001', '行政双床房', '2026-08-18', '2026-08-19', 68800, '已完成'),
+       ($1, 'O-20260822-003', 'M-1002', '山景大床房', '2026-08-25', '2026-08-26', 52800, '已确认')
+     ON CONFLICT (workspace_id, order_id) DO NOTHING`,
+    [WS_ID],
+  );
   await svcQ(
     `INSERT INTO demo_orders (workspace_id, order_id, member_id, room_type, check_in, check_out, amount_fen, status)
      VALUES

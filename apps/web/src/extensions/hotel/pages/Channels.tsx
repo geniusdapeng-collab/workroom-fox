@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { ensureDemoLogin, trpc } from "../../../lib/trpc";
 import { Bridge } from "../../../shell/Bridge";
 import { Skeleton, SystemDivider } from "../../../components/hud";
-import { Ev, fmtTime, HBar, Note, PageHead, Row, Tag } from "../components/Twin";
+import { Ev, fmtTime, HBar, HotelStatusTag, Note, PageHead, Row } from "../components/Twin";
 import { clientValueText } from "../labels";
 
 interface ArchiveShape {
@@ -51,16 +51,16 @@ export default function P14() {
 
   return (
     <Bridge right={rightPanel}>
-      <PageHead title="渠道运营" tag="渠道巡检与内容营销" extra={<Tag tone="holo">每 30 分钟自动巡检</Tag>} />
-      {!ready ? (<><Skeleton count={2} height={44} /><Skeleton count={4} /></>) : (
+      <PageHead title="渠道运营" tag="渠道巡检与内容营销" extra={<HotelStatusTag tone="holo">每 30 分钟自动巡检</HotelStatusTag>} />
+      {!ready ? (<><Skeleton count={2} height={44} variant="card" /><Skeleton count={4} /></>) : (
         <div className="space-y-3">
           <SystemDivider time="渠道巡检快照" summary="价格一致性 / 库存同步 / 在线状态（由门店档案中的巡检配置提供）" />
           {snap.length === 0 ? (
             <div className="rounded-lg border border-line bg-card p-3 text-body text-ink3">暂无巡检快照（档案中的巡检配置尚未完成）。</div>
           ) : snap.map((c) => (
             <Row key={c.channel} right={<>
-              <Tag tone={c.parity ? "go" : "warn"}>{c.parity ? "价格一致" : "价差异常"}</Tag>
-              <Tag tone={c.status === "online" ? "holo" : "warn"}>{clientValueText(c.status)}</Tag>
+              <HotelStatusTag tone={c.parity ? "go" : "warn"}>{c.parity ? "价格一致" : "价差异常"}</HotelStatusTag>
+              <HotelStatusTag tone={c.status === "online" ? "holo" : "warn"}>{clientValueText(c.status)}</HotelStatusTag>
             </>}>
               <b className="break-words text-ink2">{clientValueText(c.channel, "经营渠道")}</b>
               <span className="ml-2 font-mono text-gold">¥{c.price}</span>
@@ -75,14 +75,14 @@ export default function P14() {
                 <b className="min-w-0 break-words text-ink2">{clientValueText(c.name, "经营渠道")}</b>
                 <span className="text-ink3">{clientValueText(c.kind, "渠道")}</span>
                 <span className="flex-1" />
-                {c.channel_new ? <Tag tone="gold">新渠道 · 首次发布须审批</Tag> : <Tag tone="ink">成熟渠道</Tag>}
+                {c.channel_new ? <HotelStatusTag tone="gold">新渠道 · 首次发布须审批</HotelStatusTag> : <HotelStatusTag tone="ink">成熟渠道</HotelStatusTag>}
               </div>
             ))}
           </div>
 
           <SystemDivider time="内容营销" summary="小红书与抖音发布全程留痕；新渠道和直播首次发布必须审批" />
           {contents.slice(0, 8).map((ev) => (
-            <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<Tag tone="go">已发布</Tag>}>
+            <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<HotelStatusTag tone="go">已发布</HotelStatusTag>}>
               <b className="break-words text-ink2">{clientValueText(ev.decision.after?.title, "内容发布")}</b>
               <span className="break-words text-ink3"> · {clientValueText(ev.context.channel ?? ev.decision.params?.platform, "经营渠道")}</span>
             </Row>

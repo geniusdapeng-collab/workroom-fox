@@ -7,7 +7,7 @@ import { ensureDemoLogin, trpc } from "../../../lib/trpc";
 import { Bridge } from "../../../shell/Bridge";
 import { EmptyState, Skeleton, SystemDivider } from "../../../components/hud";
 import { AIFeedback } from "../../../components/AIFeedback";
-import { Ev, fmtTime, HBar, Note, PageHead, Row, Stat, Tag } from "../components/Twin";
+import { Ev, fmtTime, HBar, HotelStatusTag, Note, PageHead, Row, Stat } from "../components/Twin";
 import { clientIdentifierText, clientValueText } from "../labels";
 
 const rightPanel = (
@@ -41,8 +41,8 @@ export default function P15() {
 
   return (
     <Bridge right={rightPanel}>
-      <PageHead title="口碑与差评" tag="评价处置" extra={<Tag tone="warn">差评 24 小时内响应</Tag>} />
-      {!ready ? (<><Skeleton count={2} height={44} /><Skeleton count={4} /></>) : (
+      <PageHead title="口碑与差评" tag="评价处置" extra={<HotelStatusTag tone="warn">差评 24 小时内响应</HotelStatusTag>} />
+      {!ready ? (<><Skeleton count={2} height={44} variant="card" /><Skeleton count={4} /></>) : (
         <div className="space-y-3">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
             <Stat label="评价回复（窗口）" value={replies.length} />
@@ -54,7 +54,7 @@ export default function P15() {
 
           <SystemDivider time="响应时限告警" summary="差评超过 24 小时未响应 → 自动升级店长（差评响应慢占流失 20%）" />
           {sla.length === 0 ? <div className="rounded-lg border border-line bg-card p-3 text-body text-go">当前无超时差评</div> : sla.map((ev) => (
-            <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<Tag tone="warn">已升级店长</Tag>}>
+            <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<HotelStatusTag tone="warn">已升级店长</HotelStatusTag>}>
               <b className="text-ink2">{clientIdentifierText(ev.object.id, "评价编号未记录")}</b>
               <span className="break-words text-ink3"> · {clientValueText(ev.context.channel, "评价渠道")} · {Number(ev.decision.params?.review_age_hours ?? 0)} 小时未回复 · {String(ev.decision.params?.rating ?? "")} 分</span>
             </Row>
@@ -65,7 +65,7 @@ export default function P15() {
             const rating = Number(ev.decision.params?.rating ?? 5);
             const isBad = rating <= 3;
             return (
-              <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<Tag tone={isBad ? "warn" : "go"}>{rating} 分 · {isBad ? "已审批" : "自动发布"}</Tag>}>
+              <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<HotelStatusTag tone={isBad ? "warn" : "go"}>{rating} 分 · {isBad ? "已审批" : "自动发布"}</HotelStatusTag>}>
                 <b className="text-ink2">{clientIdentifierText(ev.object.id, "评价编号未记录")}</b>
                 <span className="break-words text-ink3"> · {clientValueText(ev.context.channel, "评价渠道")} · {isBad ? clientValueText(String(ev.decision.after?.draft ?? "致歉草稿").slice(0, 30), "致歉草稿已生成") + "…" : "感谢回复已发布"}</span>
                 {isBad && (

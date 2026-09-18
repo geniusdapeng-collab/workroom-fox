@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { ensureDemoLogin, trpc } from "../../../lib/trpc";
 import { Bridge } from "../../../shell/Bridge";
 import { EmptyState, Skeleton } from "../../../components/hud";
-import { Note, PageHead, Tag } from "../components/Twin";
+import { HotelStatusTag, Note, PageHead } from "../components/Twin";
 import { fieldLabel, clientValueText } from "../labels";
 
 type Archive = Record<string, unknown>;
@@ -70,8 +70,8 @@ export default function P20() {
 
   return (
     <Bridge right={rightPanel}>
-      <PageHead title="门店档案" tag="门店事实源" extra={<Tag tone="gold">全景档案</Tag>} />
-      {!ready ? (<><Skeleton count={2} height={44} /><Skeleton count={4} /></>) : !archive ? (
+      <PageHead title="门店档案" tag="门店事实源" extra={<HotelStatusTag tone="gold">全景档案</HotelStatusTag>} />
+      {!ready ? (<><Skeleton count={2} height={44} variant="card" /><Skeleton count={4} /></>) : !archive ? (
         <EmptyState title="档案未建立" hint="门店档案是数字员工生成内容前必须读取的事实源。" />
       ) : (
         <div className="space-y-3">
@@ -86,9 +86,9 @@ export default function P20() {
                     <div key={k}>
                       <div className="mb-0.5 flex items-center gap-2">
                         <span className="text-body text-holo">{fieldLabel(k)}</span>
-                        {k === "forbidden" ? <Tag tone="warn">硬约束 · 双重校验</Tag> : null}
-                        {k === "goals" ? <Tag tone="gold">经营目标数据源</Tag> : null}
-                        {k === "faq_kb" ? <Tag tone="go">语音前台数据源</Tag> : null}
+                        {k === "forbidden" ? <HotelStatusTag tone="warn">硬约束 · 双重校验</HotelStatusTag> : null}
+                        {k === "goals" ? <HotelStatusTag tone="gold">经营目标数据源</HotelStatusTag> : null}
+                        {k === "faq_kb" ? <HotelStatusTag tone="go">语音前台数据源</HotelStatusTag> : null}
                       </div>
                       {renderValue(archive[k])}
                     </div>

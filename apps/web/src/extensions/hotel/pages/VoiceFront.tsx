@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ensureDemoLogin, trpc } from "../../../lib/trpc";
 import { Bridge } from "../../../shell/Bridge";
 import { EmptyState, Skeleton, SystemDivider } from "../../../components/hud";
-import { Ev, fmtTime, HBar, Note, PageHead, Row, Stat, Tag } from "../components/Twin";
+import { Ev, fmtTime, HBar, HotelStatusTag, Note, PageHead, Row, Stat } from "../components/Twin";
 import { clientValueText } from "../labels";
 
 interface FaqKb {
@@ -53,8 +53,8 @@ export default function P16() {
 
   return (
     <Bridge right={rightPanel}>
-      <PageHead title="智能语音前台" tag="来电服务" extra={<Tag tone="go">24 小时在线</Tag>} />
-      {!ready ? (<><Skeleton count={2} height={44} /><Skeleton count={4} /></>) : (
+      <PageHead title="智能语音前台" tag="来电服务" extra={<HotelStatusTag tone="go">24 小时在线</HotelStatusTag>} />
+      {!ready ? (<><Skeleton count={2} height={44} variant="card" /><Skeleton count={4} /></>) : (
         <div className="space-y-3">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
             <Stat label="呼入（窗口）" value={calls.length} />
@@ -68,7 +68,7 @@ export default function P16() {
           {calls.slice(0, 15).map((ev) => {
             const hit = ev.decision.params?.faq_hit === true;
             return (
-              <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<Tag tone={hit ? "go" : "holo"}>{hit ? "命中即答" : "转人工"}</Tag>}>
+              <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<HotelStatusTag tone={hit ? "go" : "holo"}>{hit ? "命中即答" : "转人工"}</HotelStatusTag>}>
                 <b className="break-words text-ink2">「{clientValueText(ev.decision.params?.topic, "咨询")}」</b>
                 <span className="break-words text-ink3"> · {clientValueText(ev.decision.basis?.[0], "已记录应答依据")} · {String(ev.decision.params?.duration_sec ?? "—")} 秒</span>
               </Row>
@@ -78,14 +78,14 @@ export default function P16() {
 
           <SystemDivider time="FAQ 知识库自生长" summary="未命中问题周问 ≥3 次自动成候选 · 店长确认入库 · 三通道（IM/微信/电话）口径一致" />
           {(kb?.top_questions ?? []).map((f) => (
-            <Row key={f.q} right={<Tag tone="go">已入库 · 首响不超过 3 秒</Tag>}>
+            <Row key={f.q} right={<HotelStatusTag tone="go">已入库 · 首响不超过 3 秒</HotelStatusTag>}>
               <b className="break-words text-ink2">「{clientValueText(f.q, "常见问题")}」</b><span className="break-words text-ink3"> · 答复：{clientValueText(f.a, "已配置答复")}</span>
             </Row>
           ))}
           {(kb?.pending_candidates ?? []).map((f) => (
             <Row key={f.q} right={
               confirmed.has(f.q)
-                ? <Tag tone="go">已入库</Tag>
+                ? <HotelStatusTag tone="go">已入库</HotelStatusTag>
                 : <button type="button" onClick={() => setConfirmed((s) => new Set(s).add(f.q))} className="max-w-full whitespace-normal break-words rounded border border-gline px-2 py-0.5 font-mono text-body text-gold">确认入库</button>
             }>
               <b className="break-words text-warn">「{clientValueText(f.q, "待确认问题")}」</b>
@@ -93,7 +93,7 @@ export default function P16() {
             </Row>
           ))}
           {mines.slice(0, 4).map((ev) => (
-            <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<Tag tone="gold">萃取记录</Tag>}>
+            <Row key={ev.event_id} time={fmtTime(ev.context.time)} right={<HotelStatusTag tone="gold">萃取记录</HotelStatusTag>}>
               <span className="break-words text-ink3">{clientValueText(ev.decision.basis?.[0], "常见问题萃取")}</span>
             </Row>
           ))}

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { ensureDemoLogin, trpc } from "../../../lib/trpc";
 import { Bridge } from "../../../shell/Bridge";
 import { Skeleton, SystemDivider } from "../../../components/hud";
-import { HBar, Note, PageHead, Tag } from "../components/Twin";
+import { HBar, HotelStatusTag, Note, PageHead } from "../components/Twin";
 import { clientValueText } from "../labels";
 
 interface StoreRow {
@@ -34,8 +34,8 @@ export default function P18() {
 
   return (
     <Bridge>
-      <PageHead title="多店驾驶舱" tag="多店经营" extra={<Tag tone="gold">管理半径 3 → 5–8 家</Tag>} />
-      {!ready ? (<><Skeleton count={2} height={44} /><Skeleton count={4} /></>) : (
+      <PageHead title="多店驾驶舱" tag="多店经营" extra={<HotelStatusTag tone="gold">管理半径 3 → 5–8 家</HotelStatusTag>} />
+      {!ready ? (<><Skeleton count={2} height={44} variant="card" /><Skeleton count={4} /></>) : (
         <div className="space-y-3">
           <SystemDivider time="全店经营快照" summary="各店最新日报（入住率、平均房价、每间可售房收入）+ 昨夜决策包三栏 + 事件规模" />
           {stores.map((s) => {
@@ -46,7 +46,7 @@ export default function P18() {
                 <div className="flex min-w-0 flex-wrap items-center gap-2.5">
                   <b className="min-w-0 break-words text-body text-ink2">{clientValueText(s.name, "未命名门店")}</b>
                   <span className="flex-1" />
-                  <Tag tone="holo">事件 {s.eventCount.toLocaleString()} 条</Tag>
+                  <HotelStatusTag tone="holo">事件 {s.eventCount.toLocaleString()} 条</HotelStatusTag>
                 </div>
                 <div className="mt-2.5 grid grid-cols-1 gap-3 lg:grid-cols-3">
                   <HBar label="入住率" pct={Math.round(Number(a.occ ?? 0) * 100)} tone="bg-holo" />
@@ -55,9 +55,9 @@ export default function P18() {
                 </div>
                 <div className="mt-2 flex items-center gap-2 text-body">
                   <span className="text-ink3">昨夜决策包：</span>
-                  <Tag tone="go">已完成 {pkg.done ?? "—"}</Tag>
-                  <Tag tone={pkg.pending ? "warn" : "ink"}>待审批 {pkg.pending ?? 0}</Tag>
-                  <Tag tone={pkg.escalate ? "warn" : "ink"}>需介入 {pkg.escalate ?? 0}</Tag>
+                  <HotelStatusTag tone="go">已完成 {pkg.done ?? "—"}</HotelStatusTag>
+                  <HotelStatusTag tone={pkg.pending ? "warn" : "ink"}>待审批 {pkg.pending ?? 0}</HotelStatusTag>
+                  <HotelStatusTag tone={pkg.escalate ? "warn" : "ink"}>需介入 {pkg.escalate ?? 0}</HotelStatusTag>
                   <span className="flex-1" />
                   <span className="break-words font-mono text-body text-ink3">围栏快照 {clientValueText(pkg.fence_snapshot, "未记录")}</span>
                 </div>

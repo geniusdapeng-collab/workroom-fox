@@ -82,7 +82,7 @@ export default function P11() {
       </div>
 
       {!ready ? (
-        <><Skeleton count={2} height={44} /><Skeleton count={4} /></>
+        <><Skeleton count={2} height={44} variant="card" /><Skeleton count={4} /></>
       ) : blocks.length === 0 && adjusts.length === 0 ? (
         <EmptyState title="全渠道健康" hint="倒挂与超售零告警。系统每 15 分钟巡检一次。" />
       ) : (

@@ -1990,13 +1990,31 @@ p("前后端契约对账：web 全部 trpc 调用点均有后端挂载", async (
       calls.add(`${m[1]}.${m[2]}`);
     }
   }
-  // 契约面 = trpc/ 目录全部路由文件（v3.0 起 credits/modelFeedback 等独立路由文件同样纳入对账）
+  // 契约面 = trpc/ + industry/ 全部路由文件。行业路由已按 hotel 行业配置迁出基座
+  // （twin 等挂在 apps/server/src/industry/<industry>/*-router.ts），只扫 trpc/ 会漏判成悬空。
   const procs = new Set<string>();
-  for (const rf of readdirSync(join(root, "apps/server/src/trpc")).filter((f) => f.endsWith(".ts"))) {
-    const routerSrc = readFileSync(join(root, "apps/server/src/trpc", rf), "utf-8");
+  // 挂载别名：appRouter 里 `twin: hotelTwinRouter` 这类映射决定前端可见的名字空间（twin.*）
+  const aliasOf = new Map<string, string[]>();
+  try {
+    const appRouterSrc = readFileSync(join(root, "apps/server/src/trpc/router.ts"), "utf-8");
+    const mountBlock = appRouterSrc.slice(appRouterSrc.lastIndexOf("export const appRouter"));
+    for (const mm of mountBlock.matchAll(/^  (\w+): (\w+),/gm)) {
+      const alias = mm[1] as string;
+      const target = mm[2] as string;
+      aliasOf.set(target, [...(aliasOf.get(target) ?? []), alias]);
+    }
+  } catch { /* 无 appRouter 时退化为按常量名对账 */ }
+  const routerSources = [
+    ...walk(join(root, "apps/server/src/trpc")),
+    ...walk(join(root, "apps/server/src/industry")),
+  ].filter((f) => f.endsWith(".ts") && !f.endsWith(".test.ts"));
+  for (const rf of routerSources) {
+    const routerSrc = readFileSync(rf, "utf-8");
     for (const rm of routerSrc.matchAll(/(\w+)Router = router\(\{([\s\S]*?)\n\}\)/g)) {
+      const constName = `${rm[1] as string}Router`;
+      const namespaces = new Set<string>([rm[1] as string, ...(aliasOf.get(constName) ?? [])]);
       for (const pm of (rm[2] as string).matchAll(/^  (\w+):/gm)) {
-        procs.add(`${rm[1]}.${pm[1]}`);
+        for (const ns of namespaces) procs.add(`${ns}.${pm[1]}`);
       }
     }
   }
@@ -2429,22 +2447,27 @@ h2("onboarding 还原 mock 装配（套件环境复位）", async () => {
   const { data: st } = await api<{ result?: { data?: { llm?: { real?: boolean } } } }>("/trpc/onboarding.status", { token: tokenOwner });
   eq(st.result?.data?.llm?.real, false, "status 复位 mock");
 });
-h2("onboarding 经营主体写入 + 启用真实模式（横幅熄灭）→ 复位模拟态", async () => {
+h2("onboarding 经营主体写入 + 门禁未满足时拒绝启用真实模式（横幅保持模拟）", async () => {
   const { data } = await api<{ result?: { data?: { ok?: boolean } } }>("/trpc/onboarding.setupWorkspace", {
     method: "POST", token: tokenOwner, body: { displayName: "云栖酒店", industry: "hotel", note: "E2E 向导验收" },
   });
   eq(data.result?.data?.ok, true, "主体档案写入");
-  const { data: act } = await api<{ result?: { data?: { dataMode?: string } } }>("/trpc/onboarding.activateRealMode", { method: "POST", token: tokenOwner });
-  eq(act.result?.data?.dataMode, "real", "真实模式激活");
-  const { data: st } = await api<{ result?: { data?: { dataMode?: string } } }>("/trpc/onboarding.status", { token: tokenOwner });
-  eq(st.result?.data?.dataMode, "real", "status 反映 real（横幅熄灭条件达成）");
+  // 服务端事实门禁（迁移自 hotel）：内置模拟模型 + 示例装配不满足正式运行条件，
+  // 必须拒绝激活而不是「翻标签」——否则客户会在未接真实数据时看到正式态。
+  const act = await api<{ error?: { data?: { code?: string } } }>("/trpc/onboarding.activateRealMode", { method: "POST", token: tokenOwner });
+  eq(act.data.error?.data?.code, "PRECONDITION_FAILED", "门禁未满足 → 拒绝激活");
+  const { data: st } = await api<{ result?: { data?: {
+    dataMode?: string; persistedDataMode?: string;
+    activationGate?: { canActivate?: boolean; blockers?: string[] };
+  } } }>("/trpc/onboarding.status", { token: tokenOwner });
+  eq(st.result?.data?.dataMode, "simulated", "横幅事实源保持模拟态");
+  eq(st.result?.data?.activationGate?.canActivate, false, "门禁未全绿");
+  assert((st.result?.data?.activationGate?.blockers ?? []).length >= 1, "门禁缺口可读（人话 blocker）");
   const ev = await qApp<{ n: string }>(
     `SELECT count(*)::text AS n FROM biz_events WHERE workspace_id=$1 AND payload->'decision'->>'action'='onboarding.real_mode_activated'`,
     [scope.workspaceId],
   );
-  assert(Number(ev.rows[0]!.n) >= 1, "切换留痕");
-  // 复位：套件出口保持种子模拟态（事件保留，append-only 纪律）
-  await qApp(`UPDATE profiles SET archive=jsonb_set(archive,'{dataMode}','"simulated"'::jsonb) WHERE workspace_id=$1`, [scope.workspaceId]);
+  eq(Number(ev.rows[0]!.n), 0, "拒绝激活不产生激活留痕");
 });
 
 /* ---- D26 大版本融合 E2E：LLM 装配×节拍 / 开箱运行态 / 真实模式融合 / P21 互洽 / 降级链 ---- */
@@ -2483,11 +2506,13 @@ h2("融合·开箱运行态（种子即重度使用：卫星/实况/职场/请�
   eq(st.result?.data?.dataMode, "simulated", "模拟横幅数据源成立");
   eq(st.result?.data?.llm?.real, false, "mock 如实标注");
 });
-h2("融合·activateRealMode 后剧场/职场不受影响（模式切换纯标签）", async () => {
+h2("融合·正式模式是受门禁保护的标签：未过门禁时客户端仍按模拟态展示，剧场/职场不受影响", async () => {
   const before = await api<{ result?: { data?: { satellites?: unknown[] } } }>("/trpc/captain.theater", { token: tokenOwner });
-  await api("/trpc/onboarding.activateRealMode", { method: "POST", token: tokenOwner });
-  const { data: st } = await api<{ result?: { data?: { dataMode?: string } } }>("/trpc/onboarding.status", { token: tokenOwner });
-  eq(st.result?.data?.dataMode, "real", "切换生效");
+  // 门禁本身由上一条用例覆盖；这里验证「模式是标签」：直接写入正式标签（等价门禁全绿后的持久态）
+  await qApp(`UPDATE profiles SET archive=jsonb_set(archive,'{dataMode}','"real"'::jsonb) WHERE workspace_id=$1`, [scope.workspaceId]);
+  const { data: st } = await api<{ result?: { data?: { dataMode?: string; persistedDataMode?: string } } }>("/trpc/onboarding.status", { token: tokenOwner });
+  eq(st.result?.data?.persistedDataMode, "real", "持久标签已写入");
+  eq(st.result?.data?.dataMode, "simulated", "当前事实未过门禁 → 客户端仍按模拟态展示（不误导客户）");
   const after = await api<{ result?: { data?: { satellites?: unknown[] } } }>("/trpc/captain.theater", { token: tokenOwner });
   eq((after.data.result?.data?.satellites ?? []).length, (before.data.result?.data?.satellites ?? []).length, "剧场数据面稳定");
   await qApp(`UPDATE profiles SET archive=jsonb_set(archive,'{dataMode}','"simulated"'::jsonb) WHERE workspace_id=$1`, [scope.workspaceId]);
@@ -3499,9 +3524,24 @@ try {
   tokenOwner = await login("MEM-001");
   tokenManager = await login("MEM-002");
   tokenReadonly = await login("MEM-003");
+  // LLM 装配复位：上一轮套件若在中途失败，会把 .env 的 LLM_PROVIDER 留成 e2e-stub，
+  // 导致本轮「mock 标注 / 未装配」类断言被环境残留污染。开跑前强制回到内置 mock。
+  await api("/trpc/onboarding.saveLlmConfig", {
+    method: "POST", token: tokenOwner, body: { provider: "mock", baseUrl: "", apiKey: "", model: "" },
+  });
   defineE2E();
   await runCases(e2eCases, "HTTP E2E 用例");
 } finally {
+  // 收尾复位：H-14/H-18 会把 LLM 装配成 e2e-stub（saveLlmConfig 落盘到 .env）。
+  // 若该用例断言失败，复位语句不会执行，开发环境就被留在 stub 配置上——
+  // 这里在 finally 无条件复位为内置 mock，保证「跑完套件 = 环境可继续开发」。
+  try {
+    if (tokenOwner) {
+      await api("/trpc/onboarding.saveLlmConfig", {
+        method: "POST", token: tokenOwner, body: { provider: "mock", baseUrl: "", apiKey: "", model: "" },
+      });
+    }
+  } catch { /* 服务已退出/未登录时忽略：只是清理，不影响报告 */ }
   server.kill();
 }
 

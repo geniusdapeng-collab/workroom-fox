@@ -96,7 +96,7 @@ export default function P10() {
       </div>
 
       {!ready ? (
-        <><Skeleton count={2} height={44} /><Skeleton count={4} /></>
+        <><Skeleton count={2} height={44} variant="card" /><Skeleton count={4} /></>
       ) : incidents.length === 0 ? (
         <EmptyState title="零断点周期" hint="本周期无断点记录。断点发生后将在此形成根因闭环时间线。" />
       ) : (

@@ -2,6 +2,7 @@
  * 酒店经营页专用展示套件：统计卡 / 列表行 / 标签 / 条形 / 事件类型
  * 视觉口径与 Bridge/tokens 一致（bg-card · border-line · text-ink2/3 · gold/go/warn/holo）
  */
+import { Tag as SharedTag } from "@workloom/ui";
 import type { ReactNode } from "react";
 
 /** 五元事件通用形态（页面侧宽松视图；字段以 payload 实际为准） */
@@ -46,15 +47,6 @@ export function Stat({ label, value, tone = "text-gold", hint }: { label: string
   );
 }
 
-export function Card({ title, children }: { title?: string; children: ReactNode }) {
-  return (
-    <div className="min-w-0 rounded-lg border border-line bg-card p-3">
-      {title ? <div className="mb-2 break-words text-body tracking-[.15em] text-ink3">{title}</div> : null}
-      {children}
-    </div>
-  );
-}
-
 export function Row({ time, children, right }: { time?: string; children: ReactNode; right?: ReactNode }) {
   return (
     <div className="flex min-w-0 flex-wrap items-center gap-3 rounded-lg border border-line bg-card px-3 py-2.5">
@@ -65,9 +57,9 @@ export function Row({ time, children, right }: { time?: string; children: ReactN
   );
 }
 
-export function Tag({ tone, children }: { tone: "go" | "warn" | "holo" | "gold" | "ink"; children: ReactNode }) {
-  const cls = { go: "border-go/40 text-go", warn: "border-warn/40 text-warn", holo: "border-holo/40 text-holo", gold: "border-gline text-gold", ink: "border-line text-ink3" }[tone];
-  return <span className={`max-w-full break-words rounded border px-1.5 py-0.5 font-mono text-body ${cls}`}>{children}</span>;
+export function HotelStatusTag({ tone, children }: { tone: "go" | "warn" | "holo" | "gold" | "ink"; children: ReactNode }) {
+  const sharedTone = tone === "go" ? "success" : tone === "warn" ? "warning" : tone === "holo" ? "info" : "neutral";
+  return <SharedTag tone={sharedTone} className="max-w-full break-words">{children}</SharedTag>;
 }
 
 export function HBar({ label, pct, tone = "bg-holo", value }: { label: string; pct: number; tone?: string; value?: string }) {

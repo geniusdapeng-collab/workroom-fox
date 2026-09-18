@@ -1,7 +1,7 @@
 {
  "repo": "workloom-hotel",
  "description": "WorkLoom 酒店智能经营系统 · AI 前厅/客房/收益一体化（酒店垂直版）",
- "generatedAt": "2026-09-02T08:44:40.844Z",
+ "generatedAt": "2026-09-18T01:02:28.194Z",
  "demoPages": [
   "service-front-b-mobile.html",
   "service-front-b-pc.html",
@@ -40,7 +40,7 @@
     {
      "name": "bundles/hotel/",
      "how": "见 bundles/hotel/ 目录",
-     "desc": "11 数字员工 presets · 26 个官方技能 · 4 客群装配（audit_only/low_star_single/homestay/unmanned） · 含 fast-scan 快照快扫（15–30 分钟当场出体检报告）"
+     "desc": "围栏/技能/员工/对象/管线一键装配"
     }
    ]
   },
@@ -68,6 +68,11 @@
      "name": "围栏 DSL 引擎",
      "how": "见 docs/capability-map.md L3",
      "desc": "事前裁决：支持 in/contains_any 列表语义"
+    },
+    {
+     "name": "技能保鲜环（下行分发）",
+     "how": "见 docs/capability-map.md L3",
+     "desc": "官方技能一键投放：五道预检 + L0/L1 静默/L2 审批 + 一键回滚 + 全事件留痕"
     },
     {
      "name": "L2 编排（ASK/QUEST）",
@@ -162,9 +167,9 @@
      "desc": "对外产品故事"
     },
     {
-     "name": "自带技能 ×4",
+     "name": "自带技能 ×5",
      "how": "skills/official/",
-     "desc": "component-integration / industry-entry / product-feedback / release-gate"
+     "desc": "client-demo-recorder / component-integration / industry-entry / product-feedback 等"
     },
     {
      "name": "能力导览 PPT",

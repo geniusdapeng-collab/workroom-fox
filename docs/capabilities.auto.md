@@ -1,7 +1,7 @@
 # workloom-hotel · 能力导览（人类版）
 
 > WorkLoom 酒店智能经营系统 · AI 前厅/客房/收益一体化（酒店垂直版）
-> 本文件由 `node scripts/generate-capabilities.mjs` 从代码事实**自动生成**（2026-09-02），
+> 本文件由 `node scripts/generate-capabilities.mjs` 从代码事实**自动生成**（2026-09-18），
 > 请勿手改——能力变更后重跑生成器即可。Agent 版机器清单见 docs/capability-map.md。
 
 ## 🚀 5 分钟体验路径
@@ -18,7 +18,7 @@ pnpm install && pnpm preview:all
 
 无需任何真实后端或密钥：Mock 数据（种子 + 离线确定性模型 + 演示直登）已固化，详见 mock/README.md。
 
-## 📦 能力总览（26 项）
+## 📦 能力总览（27 项）
 
 ### 🖥 三端应用（开箱即看）
 
@@ -32,7 +32,7 @@ pnpm install && pnpm preview:all
 
 | 能力 | 一句话 | 怎么体验 |
 |---|---|---|
-| **bundles/hotel/** | 11 数字员工 presets · 26 个官方技能 · 4 客群装配（audit_only/low_star_single/homestay/unmanned） · 含 fast-scan 快照快扫（15–30 分钟当场出体检报告） | 见 bundles/hotel/ 目录 |
+| **bundles/hotel/** | 围栏/技能/员工/对象/管线一键装配 | 见 bundles/hotel/ 目录 |
 
 ### 🖐 操作电脑能力（本仓自带 · 可装生产工作站）
 
@@ -46,6 +46,7 @@ pnpm install && pnpm preview:all
 | 能力 | 一句话 | 怎么体验 |
 |---|---|---|
 | **围栏 DSL 引擎** | 事前裁决：支持 in/contains_any 列表语义 | 见 docs/capability-map.md L3 |
+| **技能保鲜环（下行分发）** | 官方技能一键投放：五道预检 + L0/L1 静默/L2 审批 + 一键回滚 + 全事件留痕 | 见 docs/capability-map.md L3 |
 | **L2 编排（ASK/QUEST）** | 一句话目标自动拆解多步骤并派发 | 见 docs/capability-map.md L3 |
 | **夜班自动运行** | 离线任务推进，次日晨报 | 见 docs/capability-map.md L3 |
 | **模型路由** | 离线确定性模型，无密钥可跑 | 见 docs/capability-map.md L3 |
@@ -72,7 +73,7 @@ pnpm install && pnpm preview:all
 |---|---|---|
 | **高保真演示页 ×6** | 糖果色，含手机壳容器 | http://localhost:3001 |
 | **官网静态站** | 对外产品故事 | apps/site/index.html |
-| **自带技能 ×4** | component-integration / industry-entry / product-feedback / release-gate | skills/official/ |
+| **自带技能 ×5** | client-demo-recorder / component-integration / industry-entry / product-feedback 等 | skills/official/ |
 | **能力导览 PPT** | 路演/汇报直接用 | docs/capability-tour.pptx |
 | **Mock 数据体系** | 种子 + 离线模型 + 演示直登，开箱即用 | mock/README.md |
 

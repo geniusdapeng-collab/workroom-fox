@@ -92,7 +92,7 @@ export default function P12() {
       </div>
 
       {!ready ? (
-        <><Skeleton count={2} height={44} /><Skeleton count={4} /></>
+        <><Skeleton count={2} height={44} variant="card" /><Skeleton count={4} /></>
       ) : !goals ? (
         <EmptyState title="尚未设定经营目标" hint="使用目标设定向导：年度目标 → 自动分解到月、渠道与房型（可一键采用同档门店基准值）。" />
       ) : (
