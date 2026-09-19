@@ -8,17 +8,17 @@
  *  - 随时"稍后再来"：进度在 useQuestline 里持久化，下次从同一关继续。
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Icon, clientChineseText, useManagedSurface } from "@workloom/ui";
-import { ensureDemoLogin, trpc } from "../../lib/trpc";
-import { AudioEngine } from "../../audio/AudioEngine";
+import { Icon, Overlay, clientChineseText, clientIdentifierText } from "@workloom/ui";
+import { ensureDemoLogin, trpc } from "../../../lib/trpc";
+import { AudioEngine } from "../../../audio/AudioEngine";
 import {
   QUEST_STAGE_ORDER,
   type QuestFacts,
   type QuestLevel,
   type QuestStageId,
   type QuestState,
-} from "../../onboarding/questline";
-import { QUESTLINE, stageDef, type TaskCardDef } from "../../onboarding/questline.config";
+} from "../onboarding/questline";
+import { QUESTLINE, stageDef, type TaskCardDef } from "../onboarding/questline.config";
 import { FoxGuide, type FoxMood } from "./FoxGuide";
 import { FoxGuideBubble } from "./FoxGuideBubble";
 import {
@@ -96,16 +96,6 @@ export function QuestlineOverlay({
   const [hintVisible, setHintVisible] = useState(false);
 
   /* M3：无障碍与表面管理交给基座统一实现（Esc 关闭 / 焦点圈定 / 背景 inert / 焦点恢复） */
-  const surface = useManagedSurface<HTMLDivElement>({
-    open,
-    kind: "dialog",
-    onDismiss: onClose,
-    modal: true,
-    dismissOnEscape: true,
-    trapFocus: true,
-    focusOnOpen: true,
-    restoreFocusOnClose: true,
-  });
 
   /* m4：引导层打开期间让织伴浮层让位（关闭后恢复用户原本的隐藏偏好） */
   useEffect(() => {
@@ -370,16 +360,21 @@ export function QuestlineOverlay({
       : def.script.enter;
 
   return (
-    <div
-      {...surface}
-      className="fixed inset-0 z-40 overflow-y-auto bg-bg950/88 backdrop-blur-sm"
-      data-questline-overlay="true"
-      data-questline-stage={state.stage}
-      role="dialog"
-      aria-modal="true"
-      aria-label="首日上岗引导"
-    >
-      <div className="mx-auto flex min-h-full w-full max-w-3xl flex-col gap-3 px-4 py-5">
+    /* 浮层一律委托共享受管表面（@workloom/ui Overlay）：焦点圈定、Esc、关闭按钮与滚动锁由基座提供 */
+    <Overlay
+        open={open}
+        kind="dialog"
+        title={`${QUESTLINE.journeyName} · 首日上岗`}
+        description="狐狸先生陪您走完五关；随时可以稍后再来。"
+        onClose={onClose}
+        closeLabel={completed ? "关闭" : "稍后再来"}
+        dismissOnBackdrop={false}
+      >
+        <div
+          className="mx-auto flex min-w-0 w-full max-w-3xl flex-col gap-3"
+          data-questline-overlay="true"
+          data-questline-stage={state.stage}
+        >
         {/* 顶部：关卡灯 + 进度 + 关闭 */}
         <header className="min-w-0 rounded-2xl border border-gline/60 bg-panel/80 px-4 py-3">
           <div className="flex min-w-0 flex-wrap items-center gap-2">
@@ -390,23 +385,6 @@ export function QuestlineOverlay({
             <span className="flex-1" />
             <span className="text-body text-ink3">董事长等级 {level.level} · {level.rank}</span>
             <span className="font-mono text-body text-goldhi">{xp} XP</span>
-            {completed ? (
-              <button
-                type="button"
-                onClick={onClose}
-                className="min-h-8 rounded border border-line px-2 py-0.5 text-body text-ink3 hover:border-gline hover:text-ink"
-              >
-                关闭
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={onClose}
-                className="min-h-8 rounded border border-line px-2 py-0.5 text-body text-ink3 hover:border-gline hover:text-ink"
-              >
-                稍后再来
-              </button>
-            )}
           </div>
           <div className="mt-2 flex min-w-0 items-center gap-1.5">
             {QUEST_STAGE_ORDER.map((id, index) => {
@@ -484,7 +462,7 @@ export function QuestlineOverlay({
                             </span>
                             <div className="min-w-0">
                               <div className="break-words text-body font-bold text-ink">{card.title}</div>
-                              <div className="font-mono text-body text-ink3">{card.presetKey}</div>
+                              <div className="font-mono text-body text-ink3">{clientIdentifierText(card.presetKey)}</div>
                             </div>
                           </div>
                           <p className="mt-2 min-w-0 break-words text-body leading-relaxed text-ink2">{card.duty}</p>
@@ -622,13 +600,13 @@ export function QuestlineOverlay({
         )}
       </div>
 
-      {toast && (
-        <div className="pointer-events-none fixed left-1/2 top-6 z-50 -translate-x-1/2">
-          <div className="rounded-full border border-gold/60 bg-bg900/95 px-4 py-2 text-body text-gold shadow-lg">
-            {toast}
+        {toast && (
+          <div className="pointer-events-none fixed left-1/2 top-6 z-50 -translate-x-1/2">
+            <div className="rounded-full border border-gold/60 bg-bg900/95 px-4 py-2 text-body text-gold shadow-lg">
+              {toast}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </Overlay>
   );
 }
