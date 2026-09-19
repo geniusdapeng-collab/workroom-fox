@@ -15,6 +15,9 @@ import { QuestlineHud } from "./guide/QuestlineHud";
 import { QuestlineOverlay } from "./guide/QuestlineOverlay";
 import { EMPTY_FACTS, factsFromRecentActions, type QuestFacts } from "./onboarding/questline";
 import { useQuestline } from "./onboarding/useQuestline";
+import { CampaignHud } from "./campaign/CampaignHud";
+import { useCampaign } from "./campaign/useCampaign";
+import type { CampaignFacts } from "./campaign/campaign";
 
 interface TickerItem {
   action: string;
@@ -129,6 +132,26 @@ export function HomeQuestlineSlot() {
 
   const questlineReady = welcomeDone && !welcomeVisible;
   const questline = useQuestline({ ready: questlineReady, facts: questlineFacts });
+
+  /* 实景商业游戏「经营主线」（赛季）：进度只认真实事实，未接入的事实保持未知（0） */
+  const campaignFacts = useMemo<CampaignFacts>(
+    () => ({
+      goalConfirmed: questlineFacts.goalConfirmed,
+      dispatched: questlineFacts.dispatched ? 1 : 0,
+      decided: questlineFacts.decided ? 1 : 0,
+      delivered: questlineFacts.delivered ? 1 : 0,
+      // 以下事实需要服务端聚合接入（见 docs/fox-business-game-plan.md §6 里程碑 M2-b）；
+      // 未接入前一律为 0 = 未知：不触发 Boss、不点亮营收里程碑、不编造数字。
+      settled: 0,
+      nightRuns: 0,
+      handledNegativeReviews: 0,
+      revenueCny: 0,
+      openNegativeReviews: 0,
+      occupancyPct: 0,
+    }),
+    [questlineFacts],
+  );
+  const campaign = useCampaign({ ready: questlineReady, facts: campaignFacts });
   const pendingApproval = useMemo(() => {
     const first = queue[0];
     if (!first) return null;
@@ -161,6 +184,10 @@ export function HomeQuestlineSlot() {
           completed={questline.state.status === "completed"}
           onOpen={questline.openQuestline}
         />
+      )}
+      {/* 实景商业游戏：赛季主线常驻面板（右下），与首日上岗（左下）成对 */}
+      {!welcomeVisible && (
+        <CampaignHud summary={campaign.summary} facts={campaignFacts} />
       )}
       <QuestlineOverlay
         open={questline.open && !welcomeVisible}
