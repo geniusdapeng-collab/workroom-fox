@@ -5,8 +5,8 @@
  *  - 未开始/进行中：显示"还差 N 关"，点一下继续；
  *  - 已完成：缩成小徽章，可重播，避免长期占屏。
  */
-import type { QuestLevel, QuestProgressSummary } from "../../onboarding/questline";
-import { QUESTLINE } from "../../onboarding/questline.config";
+import type { QuestLevel, QuestProgressSummary } from "../onboarding/questline";
+import { QUESTLINE } from "../onboarding/questline.config";
 import { FoxGuide } from "./FoxGuide";
 
 export interface QuestlineHudProps {
@@ -42,7 +42,7 @@ export function QuestlineHud({ summary, level, xp, achievements, serverXp, compl
         <div className="min-w-0 max-w-[15rem] rounded-2xl border border-gline/60 bg-panel/90 px-3 py-2 shadow-xl backdrop-blur">
           <div className="flex min-w-0 items-center gap-2">
             <span className="break-words text-body font-bold text-goldhi">{QUESTLINE.mateName}</span>
-            <span className="text-body text-ink3">Lv.{level.level} {level.rank}</span>
+            <span className="text-body text-ink3">等级 {level.level} · {level.rank}</span>
           </div>
           <div className="mt-0.5 break-words text-body leading-relaxed text-ink2">
             {completed ? "首日上岗已完成，可以重播" : summary.label}

@@ -75,11 +75,11 @@ const MALE_VOICE_RE = /male|eddy|reed|rocko|li[- ]?mu|yunxi|yunjian|yunyang|xiao
  * 实测（2026-09-18，macOS + Electron 44 真实壳）：这组音色在 zh-CN 下**能出声但不发
  * `onboundary` 事件**（同一句中文：它们 0 次 boundary，而 婷婷 15 次 / Li-Mu 13 次）。
  * 基座的口型同步链路正是靠 boundary 的 charIndex 驱动（MateLive2D / VoiceEngine.onLipSync），
- * 于是"看起来在说话、嘴却不动"。因此把它们降级为最后兜底：只有在没有任何正常中文音色时才用。
+ * 于是“看起来在说话、嘴却不动”。因此把它们降级为最后兜底：只有在没有任何正常中文音色时才用。
  */
 export const DEGRADED_VOICE_RE = /^(eddy|reed|flo|sandy|shelley|rocko|grandma|grandpa)\b/i;
 
-/** 把中文音色按"可用性"重排：正常音色在前，新奇音色垫底（保持原有 zh-CN 优先次序，稳定排序）。 */
+/** 把中文音色按“可用性”重排：正常音色在前，新奇音色垫底（保持原有 zh-CN 优先次序，稳定排序）。 */
 export function rankZhVoices<T extends { name: string }>(zh: readonly T[]): T[] {
   return [...zh].sort((a, b) => Number(DEGRADED_VOICE_RE.test(a.name)) - Number(DEGRADED_VOICE_RE.test(b.name)));
 }

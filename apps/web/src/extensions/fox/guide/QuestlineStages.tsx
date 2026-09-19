@@ -4,9 +4,9 @@
  * 约束：只负责渲染与回调，不做 tRPC 调用、不写进度、不改事实——
  * 所有副作用都留在 QuestlineOverlay 与 useQuestline 里。
  */
-import { Icon } from "@workloom/ui";
-import type { QuestLevel, QuestStageId } from "../../onboarding/questline";
-import { QUESTLINE, type TaskCardDef } from "../../onboarding/questline.config";
+import { Icon, clientIdentifierText, clientValueText } from "@workloom/ui";
+import type { QuestLevel, QuestStageId } from "../onboarding/questline";
+import { QUESTLINE, type TaskCardDef } from "../onboarding/questline.config";
 
 /** 待拍板事项视图（来自 P0 的真实审批队列，不是编造的示例） */
 export interface PendingApprovalView {
@@ -228,7 +228,8 @@ export function DispatchStage({
       </div>
       {thread && (
         <div className="min-w-0 rounded-xl border border-holo/40 bg-holo/5 px-3 py-2 text-body text-ink2">
-          任务线程 <span className="font-mono text-holo">{thread.id}</span> · 当前状态 {thread.status} ·
+          任务线程 <span className="font-mono text-holo">{clientIdentifierText(thread.id)}</span> ·
+          当前状态 {clientValueText(thread.status)} ·
           进度 {thread.progress_done}/{thread.progress_total}（下一步进入"拍板"关）
         </div>
       )}

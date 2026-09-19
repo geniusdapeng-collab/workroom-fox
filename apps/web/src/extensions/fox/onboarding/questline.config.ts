@@ -10,7 +10,7 @@
  *  - 任何"示例数字"必须带 `sample: true` 标注，界面按演示数据处理；
  *  - 台词每关至少 3 句（进场/等待/过关），单句控制在 42 字以内（"三句话汇报"节奏）。
  */
-import type { VoiceProfile } from "../voice/VoiceEngine";
+import type { VoiceProfile } from "../../../voice/VoiceEngine";
 import type { QuestStageId } from "./questline";
 
 export interface QuestScript {

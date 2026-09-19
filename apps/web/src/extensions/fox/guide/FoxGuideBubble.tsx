@@ -6,8 +6,8 @@
  * - 气泡只负责"说话"，不做任何业务判断。
  */
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { VoiceEngine, type VoicePriority } from "../../voice/VoiceEngine";
-import { FOX_MATE_VOICE, QUESTLINE } from "../../onboarding/questline.config";
+import { VoiceEngine, type VoicePriority } from "../../../voice/VoiceEngine";
+import { FOX_MATE_VOICE, QUESTLINE } from "../onboarding/questline.config";
 
 const CHAR_MS = 22;
 
