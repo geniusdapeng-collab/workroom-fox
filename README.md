@@ -5,12 +5,13 @@
 
 
 <!-- CAPABILITIES:BEGIN -->
-<!-- 本区块由 scripts/generate-capabilities.mjs 自动生成（2026-09-18），请勿手改；重跑 pnpm capabilities 更新 -->
+<!-- 本区块由 scripts/generate-capabilities.mjs 自动生成（2026-09-19），请勿手改；重跑 pnpm capabilities 更新 -->
 
 ## 🧩 系统能力速览（自动生成 · 与代码同步）
 
 - 🖥 **三端应用（开箱即看）**：PC 端 · B 端工作台 · 移动端 · B 端高保真 · 移动端 · C 端 AI 服务前台
 - 🏨 **行业 Bundle（垂直能力包）**：bundles/hotel/
+- 🧑‍💼 **数字员工与数字人（本仓自带）**：数字员工中心（`/agents`） · 织伴数字人（Live2D 常驻浮层） · 语音与口型引擎
 - 🖐 **操作电脑能力（本仓自带 · 可装生产工作站）**：computer-use 三层感知（65 动作） · HTTP 远程驱动 + MCP server
 - 🤖 **AI 自动化引擎（系统内置能力）**：围栏 DSL 引擎 · 技能保鲜环（下行分发） · L2 编排（ASK/QUEST） · 夜班自动运行 · 模型路由 · 五元事件 + RLS 隔离 等 10 项
 - ✅ **验证与质量（工程纪律）**：一键安装（bootstrap） · 主测试套件 · 发布门禁 · 五元事件验链 · Agent 能力巡游 · 环境自检
@@ -59,6 +60,45 @@
 纪律：**没有回执不说"已完成"、没有待审事项不编造审批、游戏不发放任何权限**；进度可暂停续播，
 随时"稍后再来"。技术说明见 [`docs/fox-questline.md`](docs/fox-questline.md)。
 
+## 实机运行截图（真实运行态实拍 · 非设计稿）
+
+截图来自本仓真实运行态（`pnpm setup && pnpm app`，云栖酒店演示数据）。3D 职场/舞台为实时渲染，非录制视频。
+
+| 3D 数字职场 · 经营首页（`/`） | 首日上岗 · 狐狸先生带玩（五关） |
+|---|---|
+| ![3D 数字职场](docs/images/shots/pc-home.png) | ![首日上岗](docs/images/shots/pc-questline.png) |
+
+| 数字员工 · 人机混编通讯录（`/agents`） | 织伴数字人 · 首装开场 |
+|---|---|
+| ![数字员工](docs/images/shots/pc-agents.png) | ![织伴开场](docs/images/shots/pc-mate-welcome.png) |
+
+| 统一待办（`/inbox`） | 审批中心（`/approvals`） |
+|---|---|
+| ![统一待办](docs/images/shots/pc-inbox.png) | ![审批中心](docs/images/shots/pc-approval.png) |
+
+| 经营报告 · 晨报（`/reports`） | 经营驾驶舱 · 数字CEO（`/executive`） |
+|---|---|
+| ![经营报告](docs/images/shots/pc-reports.png) | ![经营驾驶舱](docs/images/shots/pc-chairman.png) |
+
+| 夜班中心（`/night`） | 技能中心（`/skills`） |
+|---|---|
+| ![夜班中心](docs/images/shots/pc-night.png) | ![技能中心](docs/images/shots/pc-skills.png) |
+
+| 围栏规则（`/guardrails`） | 事件账本（`/events`） |
+|---|---|
+| ![围栏规则](docs/images/shots/pc-rules.png) | ![事件账本](docs/images/shots/pc-events.png) |
+
+| 组织记忆（`/memory`） | 服务前台（`/service`） |
+|---|---|
+| ![组织记忆](docs/images/shots/pc-memory.png) | ![服务前台](docs/images/shots/pc-service.png) |
+
+| 移动 B 端 · 经营主页 | 移动 B 端 · 数字员工 | C 端 · 住客对话 | C 端 · 服务大厅 |
+|---|---|---|---|
+| ![移动B端](docs/images/shots/mb-owner.png) | ![移动端数字员工](docs/images/shots/mb-agents.png) | ![C端对话](docs/images/shots/mc-chat.png) | ![服务大厅](docs/images/shots/mc-service.png) |
+
+> **数字员工名册（`/agents`）**：人与数字员工同一本通讯录，每位都有档案（来源 Bundle / 围栏授权逐条对账 / 30 天战绩 / 段位 / 派遣）；夜班岗位 22:00–08:00 自动上线，只读岗位标绿无写工具。
+> **数字人织伴（LoomMate）**：全页面常驻的 Live2D 小秘书——语音 + 口型播出晨报与告警，三态（小角落 / 大形象 / 屏保）可切，记忆透明面板可查可删。它是 Fox「视听觉醒」的常驻成员，与 3D 舞台、环境音效、导演运镜共同构成"看得见、听得到"的关系界面。
+
 ## 账号体系（基座自带 · 开箱即用）
 
 狐狸版开箱自带完整账号体系（基座 `packages/base/accounts` 同步而来，无需配置）：
@@ -82,6 +122,10 @@ pnpm app          # 启动桌面客户端（Electron，固定比例画布，推�
 首次进入默认演示数据（云栖酒店 · 全模拟运行态），开箱即玩。
 
 ## 架构速览
+
+<p align="center"><img src="docs/images/architecture.png" alt="狐狸先生系统架构（体验层 / 服务层 / hotel Bundle + 基座十域 / 运行时地基 / 数据层）" width="92%"/></p>
+
+<p align="center"><img src="docs/images/business-loop.png" alt="狐狸先生的一天：晨会报到 → 职场作业 → 举手请示 → 夜班 → 视听播报 → 首日上岗" width="92%"/></p>
 
 ```
 apps/

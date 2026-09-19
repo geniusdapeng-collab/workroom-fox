@@ -1,7 +1,7 @@
 # workloom-hotel · 能力导览（人类版）
 
 > WorkLoom 酒店智能经营系统 · AI 前厅/客房/收益一体化（酒店垂直版）
-> 本文件由 `node scripts/generate-capabilities.mjs` 从代码事实**自动生成**（2026-09-18），
+> 本文件由 `node scripts/generate-capabilities.mjs` 从代码事实**自动生成**（2026-09-19），
 > 请勿手改——能力变更后重跑生成器即可。Agent 版机器清单见 docs/capability-map.md。
 
 ## 🚀 5 分钟体验路径
@@ -18,7 +18,7 @@ pnpm install && pnpm preview:all
 
 无需任何真实后端或密钥：Mock 数据（种子 + 离线确定性模型 + 演示直登）已固化，详见 mock/README.md。
 
-## 📦 能力总览（27 项）
+## 📦 能力总览（30 项）
 
 ### 🖥 三端应用（开箱即看）
 
@@ -32,7 +32,15 @@ pnpm install && pnpm preview:all
 
 | 能力 | 一句话 | 怎么体验 |
 |---|---|---|
-| **bundles/hotel/** | 围栏/技能/员工/对象/管线一键装配 | 见 bundles/hotel/ 目录 |
+| **bundles/hotel/** | 围栏/技能/员工/对象/管线一键装配（11 个数字员工岗位 · 26 个技能） | 见 bundles/hotel/ 目录 |
+
+### 🧑‍💼 数字员工与数字人（本仓自带）
+
+| 能力 | 一句话 | 怎么体验 |
+|---|---|---|
+| **数字员工中心（`/agents`）** | 人机混编通讯录：员工档案 / 围栏对账 / 30 天战绩 / 派遣 / 夜班自动上线（本包 11 个岗位） | `pnpm preview:all` → http://localhost:3000/agents |
+| **织伴数字人（Live2D 常驻浮层）** | 与 3D 职场/舞台、环境音效、导演运镜共同构成「看得见、听得到」的关系界面；三态 + 记忆透明面板 | 打开任一 PC 页面右下角；`pnpm app` |
+| **语音与口型引擎** | 端侧 speechSynthesis + 中文逐字开口度时间线；7+1 角色固定音色；字幕条等价降级 | docs/tech-design-m1.md |
 
 ### 🖐 操作电脑能力（本仓自带 · 可装生产工作站）
 
