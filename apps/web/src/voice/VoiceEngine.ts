@@ -5,8 +5,6 @@
  *  - 优先级队列：fuse（熔断，立即打断）> ask（请示）> ceremony（仪式）> ambient；
  *  - 降级：speechSynthesis 不可用/无语音 → available=false，仅走字幕（SubBus）。
  *  - 字幕事件总线（SubBus）：所有播报（含仅字幕模式）同步发字幕，新闻台字幕条消费。
- *
- * [VOICE-DEFAULT] 织伴默认音色=本机克隆音色（工位不可用时回落系统女声）
  */
 import { AudioEngine } from "../audio/AudioEngine";
 import { neuralVoiceAvailable, neuralVoiceConfig, playNeuralSpeech, probeNeuralVoice, wantsNeuralVoice } from "./neuralVoice";
@@ -121,7 +119,7 @@ export class VoiceEngineImpl {
   private speaking = false;
 
   constructor() {
-    // 每页探测一次本机工位能力：探到了走克隆音色，探不到走系统语音（探测不阻塞播报）
+    // 每页探测一次本机工位能力：探到了走克隆音色，探不到就走系统语音（探测本身不阻塞播报）
     void probeNeuralVoice();
   }
   private active: QueuedUtterance | null = null;
@@ -314,6 +312,7 @@ export class VoiceEngineImpl {
     this.speaking = false;
     if (this.queue.length > 0) void this.pump();
   }
+
   /** 播放本机克隆音色；口型由播放进度驱动（克隆音频没有 onboundary 事件）。 */
   private async speakNeural(u: Utterance, preset: VoiceProfile): Promise<boolean> {
     return await playNeuralSpeech(

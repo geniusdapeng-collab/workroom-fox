@@ -973,6 +973,38 @@
     "apps/webc/vite.config.ts": {
       "sha256": "aa49b080fb55cbf42f9337a20fbc621dfa275fd85150cd5d7edf490205fe4fc8",
       "mode": 420
+    },
+    "apps/web/src/pages/p0/Floor.tsx": {
+      "sha256": "c82ee1209c77e18d0006d2e41a6b90555c611536e17352359d106121942b0f36",
+      "mode": 420
+    },
+    "apps/web/src/pages/p0/P0.tsx": {
+      "sha256": "4a961ba39f6c210aa0c18a8e4e6f8099e2d62f0e357014c5a9237b6d45282e3c",
+      "mode": 420
+    },
+    "apps/web/src/voice/neuralVoice.test.ts": {
+      "sha256": "e82b0c4584e84a62c1a68f44023eb74b539801cbf0b109be8531f650d81dab69",
+      "mode": 420
+    },
+    "apps/web/src/voice/neuralVoice.ts": {
+      "sha256": "cb2992522c317fb1931e6bfaf296f5ad322a92c956fe74905ba5bb80f5ab0924",
+      "mode": 420
+    },
+    "apps/web/src/voice/SubtitleBar.test.tsx": {
+      "sha256": "27bd5dda42d443cdf95981e2ce0e963e17d25441797c5ac442b9a323214a1b03",
+      "mode": 420
+    },
+    "apps/web/src/voice/SubtitleBar.tsx": {
+      "sha256": "20e01f55b394582426aadba672dea9e312c0171b7e656b5e398dcc85fe3717b8",
+      "mode": 420
+    },
+    "apps/web/src/voice/VoiceEngine.test.ts": {
+      "sha256": "87ce4618ccdc4cd0748f3d1dc7f2060c1f089caa97d23c4e5f64e990340673c2",
+      "mode": 420
+    },
+    "apps/web/src/voice/VoiceEngine.ts": {
+      "sha256": "f5de2ee7c9adffc3e0e8f4a6ab869789963d3a1618ced85c809d5b706f4764ff",
+      "mode": 420
     }
   },
   "retiredManagedForks": {
