@@ -1,15 +1,15 @@
 {
   "baseRepo": "workloom-ai/workloom-im",
   "lastSyncedBaseSha": "3887e1dcaf81aa2ba576d9404c5311c2dba82bb8",
-  "lastSyncAt": "2026-09-29T11:53:42.712Z",
-  "filesTouched": 47,
-  "lastRequiredAssetsBaseSha": "3887e1dcaf81aa2ba576d9404c5311c2dba82bb8",
-  "lastSyncMode": "full",
+  "lastSyncAt": "2026-09-29T16:32:06.629Z",
+  "filesTouched": 4,
+  "lastRequiredAssetsBaseSha": "5c2b3b29d546fdb9d899b87d3c1bc555a83e4fdb",
+  "lastSyncMode": "required-only",
   "pathPrefix": ".",
   "requiredRootAssetsSha256": {
-    "WORKLOOM_PRODUCT_CONTEXT.md": "cea905be2e1b98a33dcfdda60ff78018a0c85ffa65172deffb4956455b90a294",
+    "WORKLOOM_PRODUCT_CONTEXT.md": "59667533f52d296468d152eb7bc05908fef64decc8e6a5415b48938c79410e51",
     "AI-AUTONOMOUS-OPERATIONS.md": "7217ea891d3d71e57e667f9848ea248f67d86f52abf744ad028e1fc6d882aa59",
-    "docs/DEVELOPMENT-PROTOCOL.md": "79d163e368a755014fe10a85ca60923154e9d0e1122c36b2563cf0dfcffa7de5",
+    "docs/DEVELOPMENT-PROTOCOL.md": "e45740290666d27492e4067aa08c39f30c8b7a8ee737d49427345423af37427f",
     "docs/REAL-DEVICE-ACCEPTANCE-SPEC.md": "4c495d8b4c82ad8ef0694e376246b883f1c76313b10433c8ef5135aceb1d82db",
     "docs/acceptance/checklist.v1.json": "339841bd57f881ab58f3a1b7d2c969a83e62f95e477fd252b97703c4dd15707a",
     "docs/acceptance/checklist.v2.json": "3a1993d3b539daf78ce1fa1f8af214c633d74795f64ef6d00d0134ee3cbfcbcf",
@@ -41,13 +41,13 @@
     "scripts/acceptance/lib/compose.mjs": "629660131672bf5fe3f9a7ec2ee173fdc1306a9f7fb6de194e266b0b42f9e789",
     "scripts/acceptance/lib/target.mjs": "e23009b53ab9cfd56b1e099bc31ced62092124a445e85d6723cd6b3213ebb669",
     "scripts/acceptance/lib/live/budget.mjs": "9b393165760d5894e4babae3a17c0d5a052cf49d7ef2006528c8e28f7c092628",
-    "scripts/acceptance/lib/live/providers.mjs": "ae88b764ff5826d6f50f9e992f3ff09a05b6c08925e7774f57759ad09ac6f2d6",
+    "scripts/acceptance/lib/live/providers.mjs": "2ec2eebe6996b5d6845fab35d47e2eec62c1451403a3a3e10547804a90eec533",
     "scripts/acceptance/lib/live/stub-provider.mjs": "c06a794b557e22aa45f7012efed587e21991370b61586f5cdeeb5137a4f003e8",
     "scripts/acceptance/live.mjs": "e586c1e7203b32e117f64f4de22a7a25c4a48779a426851ef140fa4a0ec7297f",
     "scripts/delivery/README.md": "a51d9df5c65cada635981782d89138ebce3f1cbbde9f0615fdbc68bc110695bd",
     "scripts/delivery/mine-clear.mjs": "c314bfdb9c3310ed1f14976e46e9ddbf612bfde9f0938fabfcdb9b164fa43c7f",
     "scripts/delivery/mine-clear.test.mjs": "4b138b29aac10e0c49725f6b1184a0e29e7e6174a61db0d01d5081733036be04",
     ".github/workflows/base-sync-heartbeat.yml": "584bd0345fa6b55ed75100d03b5ad07a28d66a1aa7e7bc088ae594084ecd77a2",
-    "AGENTS.md#managed-section": "fadab7fc02b6bb819dee0114f671c4d7f29b1ea2024a476e6d8e2ca731885428"
+    "AGENTS.md#managed-section": "c211653ded833b9a8479ea5b2f2efc9aa12591dd58bb267fd2db058ebaecc525"
   }
 }
