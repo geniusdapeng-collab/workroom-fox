@@ -3,7 +3,7 @@
 <!-- 自动生成，请勿手改：node scripts/oss-inventory.mjs --write -->
 
 > 生成器：`scripts/oss-inventory.mjs`（离线事实）＋ `scripts/oss-watch.sh`（上游最新版本）
-> 仓库：workloom-ai/workroom-fox ｜ 最近一次上游扫描：2026-09-19T03:14:09.000Z
+> 仓库：workloom-ai/workroom-fox ｜ 最近一次上游扫描：2026-09-29T11:59:38.000Z
 > 统计：登记组件 91 个 ｜ npm 直接依赖 155 个 ｜ Python 依赖 5 个 ｜ 容器镜像 2 个
 
 ## 0. 维护机制（四件事）
@@ -21,8 +21,8 @@
 
 | # | 组件 | 开源地址 / 许可 | 当前使用版本 | 上游最新 | 状态 | 使用位置 | 注意事项 |
 |---|---|---|---|---|---|---|---|
-| 1 | DeepSeek Harness（dsh） | [github.com/deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) · MIT | 0.1.2-rc.1 | **0.1.5-rc.2** ⬆ | 运行时 | vendor/dsh（审计基线）、packages/runtime/dsh-gate（锁定运行时） | Agent 运行时地基：锁版 + 内部 fork 镜像，任何新版本（含 rc 预发布）即触发升级；永远单独一批，必过 E6 回归与 H-5 kill -9 重放；升级前必须 diff 依赖树（0.1.2-rc.1 已移除 node-pty；rc.2 起要求 Node ≥24 的 zstd API） |
-| 2 | Cordis（插件元框架） | [github.com/cordiverse/cordis](https://github.com/cordiverse/cordis) · MIT | 4.0.2 | 4.0.2 | 运行时 | 随 dsh 分发（插件元框架）、packages/runtime/plugins | 插件可撤销效果是技能绑定围栏、插件卸载即撤销的运行时保证；实际版本以 dsh 锁定树为准（上游独立仓为 4.0.0-rc 线，跟随 dsh 升级） |
+| 1 | DeepSeek Harness（dsh） | [github.com/deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) · MIT | 0.1.2-rc.1 | **0.1.7-rc.2** ⬆ | 运行时 | vendor/dsh（审计基线）、packages/runtime/dsh-gate（锁定运行时） | Agent 运行时地基：锁版 + 内部 fork 镜像，任何新版本（含 rc 预发布）即触发升级；永远单独一批，必过 E6 回归与 H-5 kill -9 重放；升级前必须 diff 依赖树（0.1.2-rc.1 已移除 node-pty；rc.2 起要求 Node ≥24 的 zstd API） |
+| 2 | Cordis（插件元框架） | [github.com/cordiverse/cordis](https://github.com/cordiverse/cordis) · MIT | 4.0.2 | **4.0.4** ⬆ | 运行时 | 随 dsh 分发（插件元框架）、packages/runtime/plugins | 插件可撤销效果是技能绑定围栏、插件卸载即撤销的运行时保证；实际版本以 dsh 锁定树为准（上游独立仓为 4.0.0-rc 线，跟随 dsh 升级） |
 | 3 | Schemastery | [github.com/deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) · MIT | 3.18.2 | 3.18.2 | 运行时 | 随 dsh 分发（配置 schema 引擎） | 配置文件校验引擎；随 dsh 锁定树升级，不单独升级 |
 | 4 | node-addon-require-builtin | [github.com/deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) · MIT | 0.1.6 | 0.1.6 | 运行时 | 随 dsh 分发（原生插件加载） | dsh 原生插件加载依赖；随 dsh 锁定树升级 |
 | 5 | dsh-im 多平台 IM 接入插件 | [github.com/xmanrui/dsh-im](https://github.com/xmanrui/dsh-im) · MIT | 0.2.2 | **4.21.2** ⬆ | 运行时 | vendor/dsh-im（文档锁定）、scripts/install-im-channels.sh | 钉钉/企微/飞书官方通道首批启用；安装走 pin 版本 + integrity 校验；观察名单（微信 iLink、WhatsApp baileys 等非官方协议）不启用；Slack 枚举位保留未接线 |
@@ -48,8 +48,8 @@
 | 25 | react-dom | [github.com/facebook/react](https://github.com/facebook/react) · MIT | 19.2.8 | **19.3.0** ⬆ | 运行时 | apps/web、apps/webc、apps/webb | 必须与 react 严格同版 |
 | 26 | React Router | [github.com/remix-run/react-router](https://github.com/remix-run/react-router) · MIT | 8.4.0 | 8.4.0 | 运行时 | apps/web | 路由与数据加载；大版本升级需核对路由表与深链（含 bare 路由返回出口） |
 | 27 | TanStack Query | [github.com/TanStack/query](https://github.com/TanStack/query) · MIT | 5.103.1 | 5.103.1 | 运行时 | apps/web | 服务端状态缓存；升级复核轮询失效策略（心跳类页面） |
-| 28 | Vite | [github.com/vitejs/vite](https://github.com/vitejs/vite) · MIT | 8.2.2 / 8.3.0 | **8.3.0** ⬆ | 开发/构建 | apps/web、apps/webc、apps/webb | 构建工具链；与 @vitejs/plugin-react、@tailwindcss/vite 同批联动；v8 走 rolldown 内核，升级后必须过三端生产构建 |
-| 29 | @vitejs/plugin-react | [github.com/vitejs/vite-plugin-react](https://github.com/vitejs/vite-plugin-react) · MIT | 6.1.0 / 6.1.1 | **6.1.1** ⬆ | 开发/构建 | apps/web、apps/webc、apps/webb | 与 vite 同批升级 |
+| 28 | Vite | [github.com/vitejs/vite](https://github.com/vitejs/vite) · MIT | 8.3.0 | **8.3.1** ⬆ | 开发/构建 | apps/web、apps/webc、apps/webb | 构建工具链；与 @vitejs/plugin-react、@tailwindcss/vite 同批联动；v8 走 rolldown 内核，升级后必须过三端生产构建 |
+| 29 | @vitejs/plugin-react | [github.com/vitejs/vite-plugin-react](https://github.com/vitejs/vite-plugin-react) · MIT | 6.1.1 | 6.1.1 | 开发/构建 | apps/web、apps/webc、apps/webb | 与 vite 同批升级 |
 | 30 | Tailwind CSS | [github.com/tailwindlabs/tailwindcss](https://github.com/tailwindlabs/tailwindcss) · MIT | 4.3.3 | 4.3.3 | 开发/构建 | apps/web、apps/webc、apps/webb、packages/ui | v4 令牌制；升级后必须过 Candy 设计系统纯色验证与三端视觉基线 |
 | 31 | @tailwindcss/vite | [github.com/tailwindlabs/tailwindcss](https://github.com/tailwindlabs/tailwindcss) · MIT | 4.3.3 | 4.3.3 | 开发/构建 | apps/web、apps/webc、apps/webb | 必须与 tailwindcss 严格同版 |
 | 32 | three.js | [github.com/mrdoob/three.js](https://github.com/mrdoob/three.js) · MIT | 0.186.0 | 0.186.0 | 运行时 | apps/web（3D 舞台/数字人） | 3D 渲染；与 @react-three/fiber、drei、postprocessing、three-stdlib 同批升级（版本矩阵敏感），升级后必须过真实渲染截图 |
@@ -119,13 +119,13 @@
 
 | 包 | 当前版本 | 声明 | 类型 | 出现位置 | 上游最新 |
 |---|---|---|---|---|---|
-| `@agentclientprotocol/sdk` | 1.4.0（声明） | 1.4.0 | 开发 | vendor/dsh/package.json | 1.4.0 |
-| `@deepseek-ai/cordis` | 4.0.2（声明） | ^4.0.2 | 生产 | vendor/dsh/package.json | 4.0.2 |
-| `@deepseek-ai/cordis-plugin-hmr` | 1.0.17（声明） | ^1.0.17 | 生产 | vendor/dsh/package.json | 1.0.17 |
-| `@deepseek-ai/cordis-plugin-include` | 1.0.7（声明） | ^1.0.7 | 生产 | vendor/dsh/package.json | 1.0.7 |
-| `@deepseek-ai/cordis-plugin-loader` | 1.0.3（声明） | ^1.0.3 | 生产 | vendor/dsh/package.json | 1.0.3 |
-| `@deepseek-ai/cordis-plugin-timer` | 1.1.4（声明） | ^1.1.4 | 生产 | vendor/dsh/package.json | 1.1.4 |
-| `@deepseek-ai/dsh` | 0.1.6-alpha.2 | 0.1.6-alpha.2 | 生产 | packages/runtime/dsh-gate/package.json | 0.1.5-rc.2 |
+| `@agentclientprotocol/sdk` | 1.4.0（声明） | 1.4.0 | 开发 | vendor/dsh/package.json | **1.5.1** ⬆ |
+| `@deepseek-ai/cordis` | 4.0.2（声明） | ^4.0.2 | 生产 | vendor/dsh/package.json | **4.0.4** ⬆ |
+| `@deepseek-ai/cordis-plugin-hmr` | 1.0.17（声明） | ^1.0.17 | 生产 | vendor/dsh/package.json | **1.0.19** ⬆ |
+| `@deepseek-ai/cordis-plugin-include` | 1.0.7（声明） | ^1.0.7 | 生产 | vendor/dsh/package.json | **1.0.9** ⬆ |
+| `@deepseek-ai/cordis-plugin-loader` | 1.0.3（声明） | ^1.0.3 | 生产 | vendor/dsh/package.json | **1.0.5** ⬆ |
+| `@deepseek-ai/cordis-plugin-timer` | 1.1.4（声明） | ^1.1.4 | 生产 | vendor/dsh/package.json | **1.1.6** ⬆ |
+| `@deepseek-ai/dsh` | 0.1.6-alpha.2 | 0.1.6-alpha.2 | 生产 | packages/runtime/dsh-gate/package.json | **0.1.7-rc.2** ⬆ |
 | `@deepseek-ai/dsh-acp` | 0.1.2-rc.1（声明） | ^0.1.2-rc.1 | 开发 | vendor/dsh/package.json | 0.0.1-rc.1 |
 | `@deepseek-ai/dsh-acp-app` | 0.1.2-rc.1（声明） | ^0.1.2-rc.1 | 生产 | vendor/dsh/package.json | 0.1.2-alpha.2 |
 | `@deepseek-ai/dsh-agent` | 0.1.2-rc.1（声明） | ^0.1.2-rc.1 | 开发 | vendor/dsh/package.json | 0.1.0-rc.6 |
@@ -225,52 +225,52 @@
 | `@deepseek-ai/dsh-webhook` | 0.1.2-rc.1（声明） | ^0.1.2-rc.1 | 生产 | vendor/dsh/package.json | 0.1.2-alpha.2 |
 | `@deepseek-ai/dsh-webhook-github` | 0.1.2-rc.1（声明） | ^0.1.2-rc.1 | 生产 | vendor/dsh/package.json | 0.1.2-alpha.2 |
 | `@deepseek-ai/dsh-workflow-worker-thread` | 0.1.2-rc.1（声明） | ^0.1.2-rc.1 | 生产 | vendor/dsh/package.json | 0.0.1-rc.3 |
-| `@deepseek-ai/schemastery` | 3.18.2（声明） | ^3.18.2 | 生产 | vendor/dsh/package.json | 3.18.2 |
-| `@hono/node-server` | 2.1.1（声明） | 2.1.1 | 生产 | .workloom-runtime-deps/package.json、apps/server/package.json | 2.1.1 |
+| `@deepseek-ai/schemastery` | 3.18.2（声明） | ^3.18.2 | 生产 | vendor/dsh/package.json | **3.18.4** ⬆ |
+| `@hono/node-server` | 2.1.1（声明） | 2.1.1 | 生产 | .workloom-runtime-deps/package.json、apps/server/package.json | **2.1.3** ⬆ |
 | `@playwright/test` | 1.63.0（声明） | 1.63.0 | 开发 | apps/web/package.json | 1.63.0 |
-| `@react-three/drei` | 10.7.8（声明） | ^10.7.8 | 生产 | apps/web/package.json | 10.7.8 |
-| `@react-three/fiber` | 9.7.0（声明） | ^9.7.0 | 生产 | apps/web/package.json | 9.7.0 |
-| `@react-three/postprocessing` | 3.1.1（声明） | ^3.1.1 | 生产 | apps/web/package.json | 3.1.1 |
+| `@react-three/drei` | 10.7.8（声明） | ^10.7.8 | 生产 | apps/web/package.json | **10.7.9** ⬆ |
+| `@react-three/fiber` | 9.7.0（声明） | ^9.7.0 | 生产 | apps/web/package.json | **9.8.1** ⬆ |
+| `@react-three/postprocessing` | 3.1.1（声明） | ^3.1.1 | 生产 | apps/web/package.json | **3.1.3** ⬆ |
 | `@tailwindcss/vite` | 4.3.3（声明） | 4.3.3 | 开发/生产 | .workloom-runtime-deps/package.json、apps/web/package.json、apps/webc/package.json | 4.3.3 |
-| `@tanstack/react-query` | 5.103.1（声明） | 5.103.1 | 生产 | apps/web/package.json | 5.103.1 |
+| `@tanstack/react-query` | 5.103.1（声明） | 5.103.1 | 生产 | apps/web/package.json | **5.104.0** ⬆ |
 | `@trpc/client` | 11.19.0（声明） | 11.19.0 | 生产 | apps/web/package.json、apps/webb/package.json | 11.19.0 |
 | `@trpc/server` | 11.19.0（声明） | 11.19.0 | 生产 | .workloom-runtime-deps/package.json、apps/server/package.json | 11.19.0 |
 | `@types/js-yaml` | 4.0.9（声明） | ^4.0.9 | 开发 | vendor/dsh/package.json | 4.0.9 |
-| `@types/node` | 24.0.0 / 24.13.3 | ^24.0.0 | 开发 | apps/server/package.json、package.json | **26.6.1** ⬆ |
+| `@types/node` | 24.0.0 / 24.13.3 | ^24.0.0 | 开发 | apps/server/package.json、package.json | **26.6.3** ⬆ |
 | `@types/pg` | 8.23.1（声明） | ^8.23.1 | 开发 | apps/server/package.json、packages/base/package.json、packages/db/package.json 等 4 处 | 8.23.1 |
 | `@types/react` | 19.2.0（声明） | ^19.2.0 | 开发 | apps/web/package.json、apps/webb/package.json、apps/webc/package.json | **19.3.0** ⬆ |
 | `@types/react-dom` | 19.2.0（声明） | ^19.2.0 | 开发 | apps/web/package.json、apps/webb/package.json、apps/webc/package.json | **19.3.0** ⬆ |
 | `@types/three` | 0.186.0（声明） | ^0.186.0 | 开发 | apps/web/package.json | 0.186.0 |
-| `@types/ws` | 8.18.1（声明） | 8.18.1 | 开发 | vendor/dsh/package.json | 8.18.1 |
-| `@vitejs/plugin-react` | 6.1.0 / 6.1.1（声明） | 6.1.0 / 6.1.1 | 开发/生产 | .workloom-runtime-deps/package.json、apps/web/package.json、apps/webb/package.json 等 4 处 | 6.1.1 |
+| `@types/ws` | 8.18.1（声明） | 8.18.1 | 开发 | vendor/dsh/package.json | **8.18.2** ⬆ |
+| `@vitejs/plugin-react` | 6.1.1（声明） | 6.1.1 | 开发/生产 | .workloom-runtime-deps/package.json、apps/web/package.json、apps/webb/package.json 等 4 处 | 6.1.1 |
 | `@workloom/ui` | 0.1.14（声明） | 0.1.14 | 生产 | apps/web/package.json、apps/webb/package.json、apps/webc/package.json | —（未扫描） |
 | `commander` | 15.0.0（声明） | ^15.0.0 | 生产 | vendor/dsh/package.json | 15.0.0 |
 | `concurrently` | 9.2.4 | ^9.1.0 | 开发 | package.json | **10.0.5** ⬆ |
-| `drizzle-orm` | 0.45.2（声明） | 0.45.2 / ^0.45.2 | 生产 | .workloom-runtime-deps/package.json、packages/db/package.json | 0.45.2 |
-| `electron` | 44.1.1 | ^44.1.1 | 开发 | package.json | **44.4.2** ⬆ |
+| `drizzle-orm` | 0.45.2（声明） | 0.45.2 / ^0.45.2 | 生产 | .workloom-runtime-deps/package.json、packages/db/package.json | **0.45.3** ⬆ |
+| `electron` | 44.1.1 | ^44.1.1 | 开发 | package.json | **44.4.5** ⬆ |
 | `electron-builder` | 26.15.3 | ^26.15.3 | 开发 | package.json | 26.15.3 |
 | `execa` | 10.0.0（声明） | ^10.0.0 | 开发 | vendor/dsh/package.json | **10.0.1** ⬆ |
-| `hono` | 4.13.8（声明） | 4.13.8 | 生产 | .workloom-runtime-deps/package.json、apps/server/package.json | 4.13.8 |
+| `hono` | 4.13.8（声明） | 4.13.8 | 生产 | .workloom-runtime-deps/package.json、apps/server/package.json | **4.13.11** ⬆ |
 | `jose` | 6.2.12（声明） | 6.2.12 | 生产 | .workloom-runtime-deps/package.json、apps/server/package.json、packages/base/package.json | 6.2.12 |
 | `js-yaml` | 4.2.0（声明） | ^4.2.0 | 生产 | vendor/dsh/package.json | **5.4.2** ⬆ |
-| `jsdom` | 30.1.0 | ^30.0.1 / ^30.1.0 | 开发 | apps/web/package.json、apps/webc/package.json、package.json | 30.1.0 |
+| `jsdom` | 30.1.0 | ^30.0.1 / ^30.1.0 | 开发 | apps/web/package.json、apps/webc/package.json、package.json | **30.1.1** ⬆ |
 | `node-addon-require-builtin` | 0.1.4（声明） | ^0.1.4 | 生产 | vendor/dsh/package.json | **0.1.6** ⬆ |
 | `pg` | 8.23.0 | 8.23.0 | 生产 | .workloom-runtime-deps/package.json、package.json、packages/base/package.json 等 5 处 | 8.23.0 |
 | `pixi-live2d-display` | 0.4.0（声明） | ^0.4.0 | 生产 | apps/web/package.json | 0.4.0 |
 | `pixi.js` | 6.5.10（声明） | ^6.5.10 | 生产 | apps/web/package.json | **8.21.0** ⬆ |
-| `postprocessing` | 6.39.5（声明） | ^6.39.5 | 生产 | apps/web/package.json | —（未扫描） |
+| `postprocessing` | 6.39.5（声明） | ^6.39.5 | 生产 | apps/web/package.json | 6.39.5 |
 | `react` | 19.2.8（声明） | 19.2.8 | 生产 | apps/web/package.json、apps/webb/package.json、apps/webc/package.json | **19.3.0** ⬆ |
 | `react-dom` | 19.2.8（声明） | 19.2.8 | 生产 | apps/web/package.json、apps/webb/package.json、apps/webc/package.json | **19.3.0** ⬆ |
 | `react-router` | 8.4.0（声明） | 8.4.0 | 生产 | apps/web/package.json | 8.4.0 |
 | `tailwindcss` | 4.3.3（声明） | 4.3.3 | 开发 | apps/web/package.json、apps/webc/package.json | 4.3.3 |
-| `three` | 0.186.0（声明） | ^0.186.0 | 生产 | apps/web/package.json | 0.186.0 |
+| `three` | 0.186.0（声明） | ^0.186.0 | 生产 | apps/web/package.json | **0.186.1** ⬆ |
 | `three-stdlib` | 2.36.1（声明） | ^2.36.1 | 生产 | apps/web/package.json | 2.36.1 |
-| `tsx` | 4.23.12 / 4.23.13 | 4.23.12 / ^4.23.12 / ^4.23.13 | 开发/生产 | .workloom-runtime-deps/package.json、apps/server/package.json、package.json 等 4 处 | 4.23.13 |
+| `tsx` | 4.23.12 / 4.23.13 | 4.23.12 / ^4.23.12 / ^4.23.13 | 开发/生产 | .workloom-runtime-deps/package.json、apps/server/package.json、package.json 等 4 处 | **4.23.15** ⬆ |
 | `typescript` | 5.9.0 / 7.0.2 | ^5.9.0 / ^7.0.2 | 开发 | apps/server/package.json、apps/web/package.json、apps/webb/package.json 等 11 处 | 7.0.2 |
 | `typescript-governance → npm:typescript` | 5.9.3 | npm:typescript@5.9.3 | 开发 | package.json | **7.0.2** ⬆ |
-| `vite` | 8.2.2 / 8.3.0（声明） | 8.2.2 / 8.3.0 | 开发/生产 | .workloom-runtime-deps/package.json、apps/web/package.json、apps/webb/package.json 等 4 处 | 8.3.0 |
-| `vitest` | 3.2.0 / 4.1.11 / 5.0.1 | ^3.2.0 / ^4.1.11 / ^5.0.1 | 开发 | apps/webb/package.json、package.json、packages/audit-engine/package.json 等 7 处 | 5.0.1 |
-| `ws` | 8.21.0（声明） | 8.21.0 | 开发 | vendor/dsh/package.json | **8.21.3** ⬆ |
+| `vite` | 8.3.0（声明） | 8.3.0 | 开发/生产 | .workloom-runtime-deps/package.json、apps/web/package.json、apps/webb/package.json 等 4 处 | **8.3.1** ⬆ |
+| `vitest` | 3.2.0 / 4.1.11 / 5.0.1 | ^3.2.0 / ^4.1.11 / ^5.0.1 | 开发 | apps/webb/package.json、package.json、packages/audit-engine/package.json 等 7 处 | **5.0.2** ⬆ |
+| `ws` | 8.21.0（声明） | 8.21.0 | 开发 | vendor/dsh/package.json | **8.22.0** ⬆ |
 | `yaml` | 2.9.0 | 2.9.0 | 开发/生产 | .workloom-runtime-deps/package.json、apps/server/package.json、package.json 等 4 处 | **2.9.1** ⬆ |
 | `yaml-governance → npm:yaml` | 2.9.0 | npm:yaml@2.9.0 | 开发 | package.json | **2.9.1** ⬆ |
 | `zod` | 4.6.5（声明） | 4.6.5 / ^4.6.5 | 生产 | .workloom-runtime-deps/package.json、apps/server/package.json、packages/base/package.json 等 6 处 | 4.6.5 |
@@ -279,11 +279,11 @@
 
 | 包 | 当前版本 | 声明 | 出现位置 | 上游最新 |
 |---|---|---|---|---|
-| `av` | 18.1.0 | ==18.1.0 | scripts/whiteboard/engine/requirements.txt | —（未扫描） |
-| `numpy` | 2.5.3 | ==2.5.3 | scripts/whiteboard/engine/requirements.txt | —（未扫描） |
-| `opencv-python` | 5.0.0.93 | ==5.0.0.93 | scripts/whiteboard/engine/requirements.txt | —（未扫描） |
-| `Pillow` | 12.3.0 | ==12.3.0 | scripts/whiteboard/engine/requirements.txt | —（未扫描） |
-| `playwright` | >=1.40.0（下限声明） | >=1.40.0 | packages/base/computer-use/toolkit/requirements.txt | 1.46.0 |
+| `av` | 18.1.0 | ==18.1.0 | scripts/whiteboard/engine/requirements.txt | 12.3.0 |
+| `numpy` | 2.5.3 | ==2.5.3 | scripts/whiteboard/engine/requirements.txt | 2.0.1 |
+| `opencv-python` | 5.0.0.93 | ==5.0.0.93 | scripts/whiteboard/engine/requirements.txt | 4.10.0.84 |
+| `Pillow` | 12.3.0 | ==12.3.0 | scripts/whiteboard/engine/requirements.txt | 12.3.0 |
+| `playwright` | >=1.40.0（下限声明） | >=1.40.0 | packages/base/computer-use/toolkit/requirements.txt | 1.45.1 |
 
 ### 2.3 容器镜像（2 个）
 
@@ -303,8 +303,9 @@
 
 ## 3. 有可用更新
 
-登记组件滞后 21 个，直接依赖滞后 18 个 —— 逐项执行单见 `docs/oss-update-plan.md`。
-- `DeepSeek Harness（dsh）` 0.1.2-rc.1 → **0.1.5-rc.2**（门禁 runtime-gate）
+登记组件滞后 21 个，直接依赖滞后 39 个 —— 逐项执行单见 `docs/oss-update-plan.md`。
+- `DeepSeek Harness（dsh）` 0.1.2-rc.1 → **0.1.7-rc.2**（门禁 runtime-gate）
+- `Cordis（插件元框架）` 4.0.2 → **4.0.4**（门禁 runtime-gate）
 - `dsh-im 多平台 IM 接入插件` 0.2.2 → **4.21.2**（门禁 standard）
 - `yaml` 2.9.0 → **2.9.1**（门禁 standard）
 - `js-yaml` 4.2.0 → **5.4.2**（门禁 standard）
@@ -313,8 +314,7 @@
 - `NATS Server（内嵌事件总线）` v2.11.4 → **v2.15.0**（门禁 full）
 - `React` 19.2.8 → **19.3.0**（门禁 full）
 - `react-dom` 19.2.8 → **19.3.0**（门禁 full）
-- `Vite` 8.2.2 / 8.3.0 → **8.3.0**（门禁 standard）
-- `@vitejs/plugin-react` 6.1.0 / 6.1.1 → **6.1.1**（门禁 standard）
+- `Vite` 8.3.0 → **8.3.1**（门禁 standard）
 - `pixi.js` 6.5.10 → **8.21.0**（门禁 full）
 - `Electron` 44.1.1 → **44.4.2**（门禁 full）
 - `Vitest` 3.2.0 / 4.1.11 / 5.0.1 → **5.0.1**（门禁 standard）

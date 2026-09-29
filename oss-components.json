@@ -2,7 +2,7 @@
   "meta": {
     "schema": "workloom.oss-components/v2",
     "name": "WorkLoom 开源组件登记表（oss-watch）",
-    "updated": "2026-09-27",
+    "updated": "2026-09-29",
     "doc": "docs/OPEN_SOURCE_COMPONENTS.md",
     "plan": "docs/oss-update-plan.md",
     "state": ".oss-watch-state.json",
@@ -37,8 +37,8 @@
       "cadence": "weekly",
       "gate": "runtime-gate",
       "notes": "Agent 运行时地基：锁版 + 内部 fork 镜像，任何新版本（含 rc 预发布）即触发升级；永远单独一批，必过 E6 回归与 H-5 kill -9 重放；升级前必须 diff 依赖树（0.1.2-rc.1 已移除 node-pty；rc.2 起要求 Node ≥24 的 zstd API）",
-      "latest": "0.1.5-rc.2",
-      "latest_checked_at": "2026-09-18T16:00:21.000Z"
+      "latest": "0.1.7-rc.2",
+      "latest_checked_at": "2026-09-29T11:59:38.000Z"
     },
     {
       "name": "Cordis（插件元框架）",
@@ -59,8 +59,8 @@
       "cadence": "weekly",
       "gate": "runtime-gate",
       "notes": "插件可撤销效果是技能绑定围栏、插件卸载即撤销的运行时保证；实际版本以 dsh 锁定树为准（上游独立仓为 4.0.0-rc 线，跟随 dsh 升级）",
-      "latest": "4.0.2",
-      "latest_checked_at": "2026-09-18T16:00:21.000Z"
+      "latest": "4.0.4",
+      "latest_checked_at": "2026-09-29T11:59:38.000Z"
     },
     {
       "name": "Schemastery",
@@ -521,8 +521,8 @@
       "cadence": "weekly",
       "gate": "standard",
       "notes": "构建工具链；与 @vitejs/plugin-react、@tailwindcss/vite 同批联动；v8 走 rolldown 内核，升级后必须过三端生产构建",
-      "latest": "8.3.0",
-      "latest_checked_at": "2026-09-18T16:00:21.000Z"
+      "latest": "8.3.1",
+      "latest_checked_at": "2026-09-29T11:59:38.000Z"
     },
     {
       "name": "@vitejs/plugin-react",
@@ -738,7 +738,7 @@
       "gate": "full",
       "notes": "E2E 与 computer-use 浏览器驱动共用；升级必须重建 Linux 视觉基线（CNB ui-gate 在同一镜像内跑）；Python 侧版本由 toolkit/requirements.txt 约束",
       "latest": "1.63.0",
-      "latest_checked_at": "2026-09-18T16:00:21.000Z"
+      "latest_checked_at": "2026-09-29T11:59:38.000Z"
     },
     {
       "name": "@axe-core/playwright",
