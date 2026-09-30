@@ -82,7 +82,7 @@
   "description": "WorkLoom 酒店智能经营系统 · AI 前厅/客房/收益一体化（酒店垂直版）",
   "pnpm": {
     "overrides": {
-      "@workloom/ui@0.1.14": "https://cnb.cool/workloom-ai/workloom-im/-/releases/download/ui-v0.1.14/workloom-ui-0.1.14.tgz"
+      "@workloom/ui@0.1.17": "https://cnb.cool/workloom-ai/workloom-im/-/releases/download/ui-v0.1.17/workloom-ui-0.1.17.tgz"
     }
   }
 }
