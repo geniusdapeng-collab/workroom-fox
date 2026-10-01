@@ -171,3 +171,9 @@ bundles/
 
 - [`docs/tech-design-m1.md`](docs/tech-design-m1.md) —— M1 视听觉醒技术方案
 - [`docs/agent-naming-spec.md`](docs/agent-naming-spec.md) —— 数字员工命名规范（F-NAME1）
+
+## 桌面 Agent 接入（Codex / DeepSeek Harness）
+
+本仓内置桌面 Agent 入口：`node scripts/workloom-agent.mjs list`（能力清单）与
+`node scripts/workloom-agent-mcp.mjs`（stdio MCP）。接入步骤、本仓可用能力与安全边界见
+[`docs/AGENT-CLIENTS.md`](docs/AGENT-CLIENTS.md)。
