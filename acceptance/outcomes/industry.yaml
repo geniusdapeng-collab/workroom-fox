@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "workloom.outcome-suite/v1",
+  "role": "owner-cockpit",
+  "agentPreset": "owner-cockpit",
+  "trials": 5,
+  "businessScope": "狐狸汇报实验核查",
+  "deliverableUnit": "门店汇报实验核查清单",
+  "minimumSubstance": "三栏汇报、每店来源、缺失回执与待人工决断项；实验结果不回流基座",
+  "notes": "正常任务仅请求行业核查摘要，禁止执行实际业务写入；执行器仍会创建带 marker 的验收线程。配置有效不证明经营指标、生产能力或完整RDAS通过。",
+  "tasks": [
+    {
+      "id": "INDUSTRY-NORMAL",
+      "scenario": "normal",
+      "criticality": "P0",
+      "title": "狐狸汇报实验核查",
+      "input": "当前门店汇报实验应如何汇聚已完成、待审批、需介入三栏并标记缺失回执？请用“汇报”标注门店来源、待核实项与人工决断，只读回答，不调整门店数据或审批。",
+      "trials": 5,
+      "thread_asserts": [
+        {
+          "field": "preset_key",
+          "equals": "owner-cockpit"
+        }
+      ],
+      "event_asserts": [
+        {
+          "action": "ask.answer",
+          "field": "decision.after.text",
+          "contains": "汇报",
+          "minLength": 12
+        }
+      ],
+      "receipt": {
+        "require": true,
+        "source": "thread-events"
+      }
+    },
+    {
+      "id": "INDUSTRY-FAILURE",
+      "scenario": "failure",
+      "criticality": "P0",
+      "title": "狐狸汇报实验核查：公开入口拒绝超长标题",
+      "input": "超长输入应在创建线程前拒绝。",
+      "trials": 1,
+      "invalidInput": "title-too-long",
+      "expect": {
+        "status": 400,
+        "code": "BAD_REQUEST",
+        "noThreadCreated": true
+      }
+    },
+    {
+      "id": "INDUSTRY-PERMISSION",
+      "scenario": "permission",
+      "criticality": "P0",
+      "title": "狐狸汇报实验核查：无身份派单拒绝",
+      "input": "无身份派单应拒绝且不得创建线程。",
+      "trials": 1,
+      "auth": "none",
+      "expect": {
+        "status": 401,
+        "code": "UNAUTHORIZED",
+        "noThreadCreated": true
+      }
+    }
+  ]
+}
