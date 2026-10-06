@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "repo": "workloom-ai/workroom-fox",
-  "revision": 60,
+  "revision": 62,
   "tasks": {
     "79": {
       "number": 79,
@@ -1430,7 +1430,7 @@
           "protocol": 5
         }
       },
-      "updatedAt": 1791313210342,
+      "updatedAt": 1791314592787,
       "headSha": "8750818f59311374bdca8b62aebc746d58836d8e",
       "mainSha": "4b6b0f7bda0ed3f1f2792c1919b8b4908711e50c",
       "branch": "chore/protocol-onboarding-delivery-0b3ca2b2eae4a920-4b6b0f7bda0e",
@@ -1577,7 +1577,14 @@
             "digest": "ce3b2e2c670fa0a4143fd7393b6b012c81e383176f081b557160fce6bf82616e"
           }
         ]
-      }
+      },
+      "originalBody": "原仓必需检查保留，新增 Codex 审查回执 和交付回归。安装范围及四问见 Issue #83 [T-2026-1006-6787]。\n\n<!-- delivery-install:0b3ca2b2eae4a920cf618a4a2bd57e780df5208bc5ef42ef1498b52dbaab4a03 -->\n\n<!-- workloom-delivery\n{\n  \"task_id\": \"T-2026-1006-6787\",\n  \"ready\": true,\n  \"depends_on\": [],\n  \"releases\": []\n}\n-->",
+      "files": [
+        ".workloom-delivery-install.json",
+        "scripts/delivery/git-state.mjs",
+        "scripts/delivery/queue.test.mjs"
+      ],
+      "ciSince": 1791314592787
     }
   },
   "leases": {
@@ -4398,6 +4405,45 @@
       },
       "previous": "3a273a0f75c6212ed8eb2cef4691400a6090112a61ba5db8d75a0f32a0399101",
       "digest": "c5ffdb2b54629edd220e72e7b744c9ae18d66c15c74d8a4712f972aea614eb0e"
+    },
+    {
+      "sequence": 61,
+      "at": "2026-10-06T19:23:12.787Z",
+      "kind": "task",
+      "data": {
+        "number": 84,
+        "patch": {
+          "headSha": "8750818f59311374bdca8b62aebc746d58836d8e",
+          "mainSha": "4b6b0f7bda0ed3f1f2792c1919b8b4908711e50c",
+          "branch": "chore/protocol-onboarding-delivery-0b3ca2b2eae4a920-4b6b0f7bda0e",
+          "intent": {
+            "taskId": "T-2026-1006-6787",
+            "ready": true,
+            "dependsOn": [],
+            "releases": []
+          },
+          "originalBody": "原仓必需检查保留，新增 Codex 审查回执 和交付回归。安装范围及四问见 Issue #83 [T-2026-1006-6787]。\n\n<!-- delivery-install:0b3ca2b2eae4a920cf618a4a2bd57e780df5208bc5ef42ef1498b52dbaab4a03 -->\n\n<!-- workloom-delivery\n{\n  \"task_id\": \"T-2026-1006-6787\",\n  \"ready\": true,\n  \"depends_on\": [],\n  \"releases\": []\n}\n-->",
+          "files": [
+            ".workloom-delivery-install.json",
+            "scripts/delivery/git-state.mjs",
+            "scripts/delivery/queue.test.mjs"
+          ],
+          "status": "waiting_ci",
+          "ciSince": 1791314592787
+        }
+      },
+      "previous": "c5ffdb2b54629edd220e72e7b744c9ae18d66c15c74d8a4712f972aea614eb0e",
+      "digest": "fa9743de307c0b1d431330cca06c96927bd11415664bffc6567042a0d3627852"
+    },
+    {
+      "sequence": 62,
+      "at": "2026-10-06T19:23:16.173Z",
+      "kind": "transaction",
+      "data": {
+        "id": "dbcd1c9f-af23-47d4-a435-dbb8192cfabc"
+      },
+      "previous": "fa9743de307c0b1d431330cca06c96927bd11415664bffc6567042a0d3627852",
+      "digest": "8497b6c0d16c4d5ff6e8030a914d15bb379380827216ea6b1c1e8b0df7fba80f"
     }
   ]
 }
