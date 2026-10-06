@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "repo": "workloom-ai/workroom-fox",
-  "revision": 31,
+  "revision": 33,
   "tasks": {
     "81": {
       "number": 81,
@@ -3573,6 +3573,28 @@
       },
       "previous": "7c245b7e1b741a98a90fa16a83df23d6f9173c58ac6bf3c682eb3c948532f524",
       "digest": "de6d0aa4d6ed0a1c8505972b4b68dbcf4b2e4e8d559b3a5c1fb382e4b6cda3c9"
+    },
+    {
+      "sequence": 32,
+      "at": "2026-10-06T18:12:23.542Z",
+      "kind": "installer_replacement_closed",
+      "data": {
+        "number": 81,
+        "replacement": 82,
+        "sha": "4b6b0f7bda0ed3f1f2792c1919b8b4908711e50c"
+      },
+      "previous": "de6d0aa4d6ed0a1c8505972b4b68dbcf4b2e4e8d559b3a5c1fb382e4b6cda3c9",
+      "digest": "0e735d46ff99743344f11cab45924e1b5e497bb3690f3918c5bb28748a8f1bb2"
+    },
+    {
+      "sequence": 33,
+      "at": "2026-10-06T18:12:22.887Z",
+      "kind": "transaction",
+      "data": {
+        "id": "installer-replacement-closed:81:82"
+      },
+      "previous": "0e735d46ff99743344f11cab45924e1b5e497bb3690f3918c5bb28748a8f1bb2",
+      "digest": "538ff4518ca0aedff49fe8329c79623cb0f064c988d11e328cab146772b991ad"
     }
   ]
 }
