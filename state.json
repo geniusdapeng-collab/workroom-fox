@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "repo": "workloom-ai/workroom-fox",
-  "revision": 62,
+  "revision": 64,
   "tasks": {
     "79": {
       "number": 79,
@@ -1584,7 +1584,15 @@
         "scripts/delivery/git-state.mjs",
         "scripts/delivery/queue.test.mjs"
       ],
-      "ciSince": 1791314592787
+      "ciSince": 1791314592787,
+      "candidate": {
+        "number": 85,
+        "branch": "delivery/candidate/pr-84-b8944c9d184f8060c0b3f2943e791286",
+        "headSha": "8750818f59311374bdca8b62aebc746d58836d8e",
+        "mainSha": "4b6b0f7bda0ed3f1f2792c1919b8b4908711e50c",
+        "marker": "delivery-origin:84:8750818f59311374bdca8b62aebc746d58836d8e:4b6b0f7bda0ed3f1f2792c1919b8b4908711e50c",
+        "at": 1791314592787
+      }
     }
   },
   "leases": {
@@ -4444,6 +4452,36 @@
       },
       "previous": "fa9743de307c0b1d431330cca06c96927bd11415664bffc6567042a0d3627852",
       "digest": "8497b6c0d16c4d5ff6e8030a914d15bb379380827216ea6b1c1e8b0df7fba80f"
+    },
+    {
+      "sequence": 63,
+      "at": "2026-10-06T19:23:12.787Z",
+      "kind": "task",
+      "data": {
+        "number": 84,
+        "patch": {
+          "candidate": {
+            "number": 85,
+            "branch": "delivery/candidate/pr-84-b8944c9d184f8060c0b3f2943e791286",
+            "headSha": "8750818f59311374bdca8b62aebc746d58836d8e",
+            "mainSha": "4b6b0f7bda0ed3f1f2792c1919b8b4908711e50c",
+            "marker": "delivery-origin:84:8750818f59311374bdca8b62aebc746d58836d8e:4b6b0f7bda0ed3f1f2792c1919b8b4908711e50c",
+            "at": 1791314592787
+          }
+        }
+      },
+      "previous": "8497b6c0d16c4d5ff6e8030a914d15bb379380827216ea6b1c1e8b0df7fba80f",
+      "digest": "959c3650111bd1a42cdf191a5f3b2428bcbb588a3c624d29a64d650ef456980d"
+    },
+    {
+      "sequence": 64,
+      "at": "2026-10-06T19:23:17.247Z",
+      "kind": "transaction",
+      "data": {
+        "id": "57847c64-5dc3-41f9-ae0d-6bcbe8dd1771"
+      },
+      "previous": "959c3650111bd1a42cdf191a5f3b2428bcbb588a3c624d29a64d650ef456980d",
+      "digest": "4efa746df11a2cc9968b393f2d3b31acfebedde7c7d4a84e49c64938f4dc8643"
     }
   ]
 }
