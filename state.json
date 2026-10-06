@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "repo": "workloom-ai/workroom-fox",
-  "revision": 96,
+  "revision": 98,
   "tasks": {
     "79": {
       "number": 79,
@@ -5270,6 +5270,35 @@
       },
       "previous": "6084a2788f6266ef62aad77c472e2c2b7b411d9a2f02654c88c7fd9db36fdf82",
       "digest": "b870ec4ebc7abc5864912d33a8ff5bce0de594c5d8d1d5eda88916886094c503"
+    },
+    {
+      "sequence": 97,
+      "at": "2026-10-06T19:47:34.756Z",
+      "kind": "installation_updated",
+      "data": {
+        "installer": 84,
+        "merge": {
+          "sha": "e22d80fea9a7120e740b0984cf1f1ed30a218f9d",
+          "sourceSha": "8750818f59311374bdca8b62aebc746d58836d8e",
+          "mainSha": "4b6b0f7bda0ed3f1f2792c1919b8b4908711e50c",
+          "checkSha": "90a35201c9d6de4fac612ec6a029122adb3c7ec8",
+          "mergedBy": "cnb.dYiF05kxAGA",
+          "verifiedAt": "2026-10-06T19:47:30.799Z"
+        },
+        "mainSha": "e22d80fea9a7120e740b0984cf1f1ed30a218f9d"
+      },
+      "previous": "b870ec4ebc7abc5864912d33a8ff5bce0de594c5d8d1d5eda88916886094c503",
+      "digest": "e0cd0d86e8e64816f645be3df840aafb1ebc2e8689167833db252a7ebfb6e9d0"
+    },
+    {
+      "sequence": 98,
+      "at": "2026-10-06T19:47:33.816Z",
+      "kind": "transaction",
+      "data": {
+        "id": "install-updated:84:e22d80fea9a7120e740b0984cf1f1ed30a218f9d"
+      },
+      "previous": "e0cd0d86e8e64816f645be3df840aafb1ebc2e8689167833db252a7ebfb6e9d0",
+      "digest": "79d9d30247be0442afa83379bd025658a187ebc9ffb9117a00c4be993fc0e0f4"
     }
   ]
 }
