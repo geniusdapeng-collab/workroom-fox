@@ -1,8 +1,29 @@
 {
   "schemaVersion": 1,
   "repo": "workloom-ai/workroom-fox",
-  "revision": 33,
+  "revision": 35,
   "tasks": {
+    "79": {
+      "number": 79,
+      "status": "waiting_ci",
+      "firstSeen": 1791310514538,
+      "attempts": {},
+      "headSha": "01d87a317657118935d1afc5da1f28453ddda574",
+      "mainSha": "4b6b0f7bda0ed3f1f2792c1919b8b4908711e50c",
+      "branch": "task/T-2026-1003-9104",
+      "intent": {
+        "taskId": "T-2026-1003-9104",
+        "dependsOn": [],
+        "releases": []
+      },
+      "originalBody": "当前 main 的行业路由仍用两参数 fenceRuleRowId 和固定 v-next，底层已有版本身份契约，导致服务端类型检查失败；修复同时消除旧固定版本提案流程的重复身份风险。本次复用基座已有版本递增、当前基线校验、同事务 dry-run 确认、事件及审批写入；保留本仓原有权限中间件，并对同一 pending dry-run 加行锁。连续提案分别落 v2/v3，失败不会消耗 pending 或留下半条事件/审批。\n\n验证：本仓 server 与 web 两项类型检查通过；16 项新增/更新回归通过。围栏测试使用真实隔离 PostgreSQL、RLS 与五元事件，成员身份和写入故障由模拟夹具注入；Tiger 交易执行器仅模拟，未接实盘。覆盖重复/并发提案、跨区/错规则/非 pending 拒绝、基线拒绝后重试、完整回滚及权限。\n\n扩展围栏检查仍有既有失败：共享 SDK 测试保留旧两参数调用及无版本事件断言；Eagle、Hyper 的遗留 AI-PM 围栏资产还缺少当前 DSL 要求的 version/default_level 字段。相关 SDK 生产代码、测试和夹具未被本 PR 修改，源文件已与基线比对，失败日志随交付留存。 不能把 allowFailure 流水线成功等同于全部业务测试通过。\n\n风险：review。本 PR 涉及围栏、事件、审批及 Tiger 授权输入，按开发协议保留 risk/review 人审；不移除风险标签，不强制合并。回滚：revert 本 PR，不改数据库 schema 或依赖。\n\n任务卡：https://cnb.cool/workloom-ai/workroom-fox/-/issues/78\n\n变更路径：\n- `apps/server/src/trpc/router.ts`\n- `apps/server/src/trpc/fence-proposal.pg.test.ts`",
+      "files": [
+        "apps/server/src/trpc/fence-proposal.pg.test.ts",
+        "apps/server/src/trpc/router.ts"
+      ],
+      "ciSince": 1791310514538,
+      "updatedAt": 1791310514538
+    },
     "81": {
       "number": 81,
       "status": "waiting_ci",
@@ -3595,6 +3616,43 @@
       },
       "previous": "0e735d46ff99743344f11cab45924e1b5e497bb3690f3918c5bb28748a8f1bb2",
       "digest": "538ff4518ca0aedff49fe8329c79623cb0f064c988d11e328cab146772b991ad"
+    },
+    {
+      "sequence": 34,
+      "at": "2026-10-06T18:15:14.538Z",
+      "kind": "task",
+      "data": {
+        "number": 79,
+        "patch": {
+          "headSha": "01d87a317657118935d1afc5da1f28453ddda574",
+          "mainSha": "4b6b0f7bda0ed3f1f2792c1919b8b4908711e50c",
+          "branch": "task/T-2026-1003-9104",
+          "intent": {
+            "taskId": "T-2026-1003-9104",
+            "dependsOn": [],
+            "releases": []
+          },
+          "originalBody": "当前 main 的行业路由仍用两参数 fenceRuleRowId 和固定 v-next，底层已有版本身份契约，导致服务端类型检查失败；修复同时消除旧固定版本提案流程的重复身份风险。本次复用基座已有版本递增、当前基线校验、同事务 dry-run 确认、事件及审批写入；保留本仓原有权限中间件，并对同一 pending dry-run 加行锁。连续提案分别落 v2/v3，失败不会消耗 pending 或留下半条事件/审批。\n\n验证：本仓 server 与 web 两项类型检查通过；16 项新增/更新回归通过。围栏测试使用真实隔离 PostgreSQL、RLS 与五元事件，成员身份和写入故障由模拟夹具注入；Tiger 交易执行器仅模拟，未接实盘。覆盖重复/并发提案、跨区/错规则/非 pending 拒绝、基线拒绝后重试、完整回滚及权限。\n\n扩展围栏检查仍有既有失败：共享 SDK 测试保留旧两参数调用及无版本事件断言；Eagle、Hyper 的遗留 AI-PM 围栏资产还缺少当前 DSL 要求的 version/default_level 字段。相关 SDK 生产代码、测试和夹具未被本 PR 修改，源文件已与基线比对，失败日志随交付留存。 不能把 allowFailure 流水线成功等同于全部业务测试通过。\n\n风险：review。本 PR 涉及围栏、事件、审批及 Tiger 授权输入，按开发协议保留 risk/review 人审；不移除风险标签，不强制合并。回滚：revert 本 PR，不改数据库 schema 或依赖。\n\n任务卡：https://cnb.cool/workloom-ai/workroom-fox/-/issues/78\n\n变更路径：\n- `apps/server/src/trpc/router.ts`\n- `apps/server/src/trpc/fence-proposal.pg.test.ts`",
+          "files": [
+            "apps/server/src/trpc/fence-proposal.pg.test.ts",
+            "apps/server/src/trpc/router.ts"
+          ],
+          "status": "waiting_ci",
+          "ciSince": 1791310514538
+        }
+      },
+      "previous": "538ff4518ca0aedff49fe8329c79623cb0f064c988d11e328cab146772b991ad",
+      "digest": "704c1c140fa13e3f13d515ae76bbccc9cc8bad04cd3b6a538aad0e49f1597ccf"
+    },
+    {
+      "sequence": 35,
+      "at": "2026-10-06T18:15:16.173Z",
+      "kind": "transaction",
+      "data": {
+        "id": "bf08f89b-35f0-407f-8f95-5360d0ecbbde"
+      },
+      "previous": "704c1c140fa13e3f13d515ae76bbccc9cc8bad04cd3b6a538aad0e49f1597ccf",
+      "digest": "9ad744bd52ce85b69e215f30aba008a0ad15f5bbafd81e0a0c0784144f47123b"
     }
   ]
 }
