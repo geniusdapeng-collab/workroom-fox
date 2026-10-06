@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "repo": "workloom-ai/workroom-fox",
-  "revision": 93,
+  "revision": 96,
   "tasks": {
     "79": {
       "number": 79,
@@ -22,14 +22,14 @@
         "apps/server/src/trpc/router.ts"
       ],
       "ciSince": 1791315892733,
-      "updatedAt": 1791315892733,
+      "updatedAt": 1791315903272,
       "alignmentCount": 1,
       "alignmentIntent": null,
       "developerReview": null,
       "admission": {
         "number": 79,
-        "headSha": "fe7c969163e20c9dc2c6c04c28cad201c44e7868",
-        "mainSha": "4b6b0f7bda0ed3f1f2792c1919b8b4908711e50c",
+        "headSha": "9f65160eaf6e4e13f3852717fcd9e8d8589db443",
+        "mainSha": "e22d80fea9a7120e740b0984cf1f1ed30a218f9d",
         "filesHash": "36b5fb2484cfb695bef7db7272dfbd865cdcdbc479a8543a47a3ea4bc5436046",
         "scopes": [],
         "owner": "admission/pr-79",
@@ -5223,6 +5223,53 @@
       },
       "previous": "31f1006dbdf876c200dd4b5290d7995c262897784e6fc0ccc35b6a74d60bb9e6",
       "digest": "88ece870a7c1e372df25d2197ea0b21ef2b5fbec0917e06b90e40ecc98ee46f5"
+    },
+    {
+      "sequence": 94,
+      "at": "2026-10-06T19:45:03.272Z",
+      "kind": "source_admitted",
+      "data": {
+        "number": 79,
+        "headSha": "9f65160eaf6e4e13f3852717fcd9e8d8589db443",
+        "mainSha": "e22d80fea9a7120e740b0984cf1f1ed30a218f9d",
+        "filesHash": "36b5fb2484cfb695bef7db7272dfbd865cdcdbc479a8543a47a3ea4bc5436046",
+        "scopes": [],
+        "owner": "admission/pr-79",
+        "generation": {}
+      },
+      "previous": "88ece870a7c1e372df25d2197ea0b21ef2b5fbec0917e06b90e40ecc98ee46f5",
+      "digest": "3bfbf37360a0ec820a26033fe921430f4fcc67b1ac339b65220c93c96b3c1d89"
+    },
+    {
+      "sequence": 95,
+      "at": "2026-10-06T19:45:03.272Z",
+      "kind": "task",
+      "data": {
+        "number": 79,
+        "patch": {
+          "admission": {
+            "number": 79,
+            "headSha": "9f65160eaf6e4e13f3852717fcd9e8d8589db443",
+            "mainSha": "e22d80fea9a7120e740b0984cf1f1ed30a218f9d",
+            "filesHash": "36b5fb2484cfb695bef7db7272dfbd865cdcdbc479a8543a47a3ea4bc5436046",
+            "scopes": [],
+            "owner": "admission/pr-79",
+            "generation": {}
+          }
+        }
+      },
+      "previous": "3bfbf37360a0ec820a26033fe921430f4fcc67b1ac339b65220c93c96b3c1d89",
+      "digest": "6084a2788f6266ef62aad77c472e2c2b7b411d9a2f02654c88c7fd9db36fdf82"
+    },
+    {
+      "sequence": 96,
+      "at": "2026-10-06T19:45:02.990Z",
+      "kind": "transaction",
+      "data": {
+        "id": "source-admit:79:9f65160eaf6e4e13f3852717fcd9e8d8589db443:e22d80fea9a7120e740b0984cf1f1ed30a218f9d"
+      },
+      "previous": "6084a2788f6266ef62aad77c472e2c2b7b411d9a2f02654c88c7fd9db36fdf82",
+      "digest": "b870ec4ebc7abc5864912d33a8ff5bce0de594c5d8d1d5eda88916886094c503"
     }
   ]
 }
