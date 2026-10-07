@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "repo": "workloom-ai/workroom-fox",
-  "revision": 384,
+  "revision": 386,
   "tasks": {
     "79": {
       "number": 79,
@@ -22,7 +22,7 @@
         "apps/server/src/trpc/router.ts"
       ],
       "ciSince": 1791315892733,
-      "updatedAt": 1791380410748,
+      "updatedAt": 1791381014916,
       "alignmentCount": 1,
       "alignmentIntent": null,
       "developerReview": null,
@@ -37,7 +37,7 @@
       },
       "recoveryCount": 0,
       "reviewFailures": null,
-      "blockedUntil": 1791381010748,
+      "blockedUntil": 1791381614916,
       "candidate": null,
       "alignment": {
         "sha": "9f65160eaf6e4e13f3852717fcd9e8d8589db443",
@@ -45,7 +45,7 @@
         "mainSha": "e22d80fea9a7120e740b0984cf1f1ed30a218f9d",
         "verifiedAt": "2026-10-06T19:44:56.344Z"
       },
-      "error": "检查/评审阻断：Developer has not handed off; Codex review identity differs from the exact repository/source/main/policy",
+      "error": "CNB 429 https://api.cnb.cool/workloom-ai/workroom-fox/-/pulls/79 :: {\"errcode\":8,\"errmsg\":\"Too many requests. Please try again later.\"}\n",
       "repairRequired": {
         "provider": "codex",
         "headSha": "9f65160eaf6e4e13f3852717fcd9e8d8589db443",
@@ -10083,6 +10083,31 @@
       },
       "previous": "a8fdfec881cca2e136377928bc8cbf7b2203210cc06648e94244912027bc293f",
       "digest": "20d2b3ad86ffa4c27bed4e0e7d581bf1245a0fe21ee24cb1ade20bb40b844216"
+    },
+    {
+      "sequence": 385,
+      "at": "2026-10-07T13:50:14.916Z",
+      "kind": "task",
+      "data": {
+        "number": 79,
+        "patch": {
+          "status": "parked",
+          "error": "CNB 429 https://api.cnb.cool/workloom-ai/workroom-fox/-/pulls/79 :: {\"errcode\":8,\"errmsg\":\"Too many requests. Please try again later.\"}\n",
+          "blockedUntil": 1791381614916
+        }
+      },
+      "previous": "20d2b3ad86ffa4c27bed4e0e7d581bf1245a0fe21ee24cb1ade20bb40b844216",
+      "digest": "a6249d39de9e630f3855a703b7136ce7e54639397dc15df0cce22e5bea144b56"
+    },
+    {
+      "sequence": 386,
+      "at": "2026-10-07T13:50:17.584Z",
+      "kind": "transaction",
+      "data": {
+        "id": "581e38a7-cdec-4fec-9173-c19b6d271e5d"
+      },
+      "previous": "a6249d39de9e630f3855a703b7136ce7e54639397dc15df0cce22e5bea144b56",
+      "digest": "1170cd25f7ffbe0970c5ac4a5e0787e53deff07f80a4bddbc2e7e5f0c768e9e9"
     }
   ]
 }
