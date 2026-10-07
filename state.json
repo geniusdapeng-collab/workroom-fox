@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "repo": "workloom-ai/workroom-fox",
-  "revision": 508,
+  "revision": 510,
   "tasks": {
     "79": {
       "number": 79,
@@ -22,7 +22,7 @@
         "apps/server/src/trpc/router.ts"
       ],
       "ciSince": 1791315892733,
-      "updatedAt": 1791408914524,
+      "updatedAt": 1791409215097,
       "alignmentCount": 1,
       "alignmentIntent": null,
       "developerReview": null,
@@ -37,7 +37,7 @@
       },
       "recoveryCount": 0,
       "reviewFailures": null,
-      "blockedUntil": 1791409514524,
+      "blockedUntil": 1791409815097,
       "candidate": null,
       "alignment": {
         "sha": "9f65160eaf6e4e13f3852717fcd9e8d8589db443",
@@ -12093,6 +12093,31 @@
       },
       "previous": "cf29911c86a9f00a3465b62c6b6d568d0bec032f747e2341e6969b8f3aefba0f",
       "digest": "33ab9731c9eb5b1550c5c809c9852744d46fc88a9687fa650f40871d78a00019"
+    },
+    {
+      "sequence": 509,
+      "at": "2026-10-07T21:40:15.097Z",
+      "kind": "task",
+      "data": {
+        "number": 79,
+        "patch": {
+          "status": "parked",
+          "error": "CNB 429 https://api.cnb.cool/workloom-ai/workroom-fox/-/pulls/79/commit-statuses :: {\"errcode\":8,\"errmsg\":\"Too many requests. Please try again later.\"}\n",
+          "blockedUntil": 1791409815097
+        }
+      },
+      "previous": "33ab9731c9eb5b1550c5c809c9852744d46fc88a9687fa650f40871d78a00019",
+      "digest": "a0bb4a81c89fba9d21bee2167f6d6c00d5f2229d1e8bae41632e9170a79e30a4"
+    },
+    {
+      "sequence": 510,
+      "at": "2026-10-07T21:40:19.024Z",
+      "kind": "transaction",
+      "data": {
+        "id": "b0c820a7-86f8-4679-bf3e-5a5d9d7450ba"
+      },
+      "previous": "a0bb4a81c89fba9d21bee2167f6d6c00d5f2229d1e8bae41632e9170a79e30a4",
+      "digest": "40ed1b3fab2c408491e66bfadc5afe6e97749ffdab8f15a86189956480afbef6"
     }
   ]
 }
