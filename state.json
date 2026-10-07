@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "repo": "workloom-ai/workroom-fox",
-  "revision": 336,
+  "revision": 338,
   "tasks": {
     "79": {
       "number": 79,
@@ -37,7 +37,7 @@
       },
       "recoveryCount": 0,
       "reviewFailures": null,
-      "blockedUntil": 1791368711305,
+      "blockedUntil": 1791369613988,
       "candidate": null,
       "alignment": {
         "sha": "9f65160eaf6e4e13f3852717fcd9e8d8589db443",
@@ -51,7 +51,7 @@
         "headSha": "9f65160eaf6e4e13f3852717fcd9e8d8589db443",
         "mainSha": "e22d80fea9a7120e740b0984cf1f1ed30a218f9d",
         "reason": "检查/评审阻断：Developer has not handed off; Codex review identity differs from the exact repository/source/main/policy",
-        "at": 1791368111305
+        "at": 1791369013988
       },
       "recoveryIntent": null
     },
@@ -9315,6 +9315,39 @@
       },
       "previous": "18dfc2ba83e9fcef88ca1c2771a10d7e34ef3e440b822b3c194789e557cec56d",
       "digest": "055d47e8b6d003ee2e9af4f45d9267bca6c068e85e7bd5c7ff7ff2718ae11be3"
+    },
+    {
+      "sequence": 337,
+      "at": "2026-10-07T10:30:13.988Z",
+      "kind": "task",
+      "data": {
+        "number": 79,
+        "patch": {
+          "status": "parked",
+          "error": "检查/评审阻断：Developer has not handed off; Codex review identity differs from the exact repository/source/main/policy",
+          "repairRequired": {
+            "provider": "codex",
+            "headSha": "9f65160eaf6e4e13f3852717fcd9e8d8589db443",
+            "mainSha": "e22d80fea9a7120e740b0984cf1f1ed30a218f9d",
+            "reason": "检查/评审阻断：Developer has not handed off; Codex review identity differs from the exact repository/source/main/policy",
+            "at": 1791369013988
+          },
+          "recoveryIntent": null,
+          "blockedUntil": 1791369613988
+        }
+      },
+      "previous": "055d47e8b6d003ee2e9af4f45d9267bca6c068e85e7bd5c7ff7ff2718ae11be3",
+      "digest": "4b280e190d15d9fcce2ee94fa26b4fdf682d172e210c29540b7fd4393b3ce6bc"
+    },
+    {
+      "sequence": 338,
+      "at": "2026-10-07T10:30:15.662Z",
+      "kind": "transaction",
+      "data": {
+        "id": "6e6652b6-deef-4ea7-b199-240e54bea78f"
+      },
+      "previous": "4b280e190d15d9fcce2ee94fa26b4fdf682d172e210c29540b7fd4393b3ce6bc",
+      "digest": "94697013e7837d82df600a9af9128a0168a1eb10076dc83afa87d431d000bd57"
     }
   ]
 }
