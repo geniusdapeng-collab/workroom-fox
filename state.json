@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "repo": "workloom-ai/workroom-fox",
-  "revision": 548,
+  "revision": 550,
   "tasks": {
     "79": {
       "number": 79,
@@ -37,7 +37,7 @@
       },
       "recoveryCount": 0,
       "reviewFailures": null,
-      "blockedUntil": 1791418815517,
+      "blockedUntil": 1791419713856,
       "candidate": null,
       "alignment": {
         "sha": "9f65160eaf6e4e13f3852717fcd9e8d8589db443",
@@ -45,13 +45,13 @@
         "mainSha": "e22d80fea9a7120e740b0984cf1f1ed30a218f9d",
         "verifiedAt": "2026-10-06T19:44:56.344Z"
       },
-      "error": "CNB 429 https://api.cnb.cool/workloom-ai/workroom-fox/-/pulls/79/commit-statuses :: {\"errcode\":8,\"errmsg\":\"Too many requests. Please try again later.\"}\n",
+      "error": "检查/评审阻断：Developer has not handed off; Codex review identity differs from the exact repository/source/main/policy",
       "repairRequired": {
         "provider": "codex",
         "headSha": "9f65160eaf6e4e13f3852717fcd9e8d8589db443",
         "mainSha": "e22d80fea9a7120e740b0984cf1f1ed30a218f9d",
         "reason": "检查/评审阻断：Developer has not handed off; Codex review identity differs from the exact repository/source/main/policy",
-        "at": 1791417014921
+        "at": 1791419113856
       },
       "recoveryIntent": null
     },
@@ -12725,6 +12725,39 @@
       },
       "previous": "3082e34987a95fce4c090f4374d7fb514bcbc81260b5e239594676eea7275553",
       "digest": "8a1947dc32ac5104535638efb75ac496e6c9fccb9f610dc346b0201d3b89c860"
+    },
+    {
+      "sequence": 549,
+      "at": "2026-10-08T00:25:13.856Z",
+      "kind": "task",
+      "data": {
+        "number": 79,
+        "patch": {
+          "status": "parked",
+          "error": "检查/评审阻断：Developer has not handed off; Codex review identity differs from the exact repository/source/main/policy",
+          "repairRequired": {
+            "provider": "codex",
+            "headSha": "9f65160eaf6e4e13f3852717fcd9e8d8589db443",
+            "mainSha": "e22d80fea9a7120e740b0984cf1f1ed30a218f9d",
+            "reason": "检查/评审阻断：Developer has not handed off; Codex review identity differs from the exact repository/source/main/policy",
+            "at": 1791419113856
+          },
+          "recoveryIntent": null,
+          "blockedUntil": 1791419713856
+        }
+      },
+      "previous": "8a1947dc32ac5104535638efb75ac496e6c9fccb9f610dc346b0201d3b89c860",
+      "digest": "6516cccb2027671137b03867f4165d51d11e8ef790f96a19705aa3cc6ad75bbb"
+    },
+    {
+      "sequence": 550,
+      "at": "2026-10-08T00:25:16.790Z",
+      "kind": "transaction",
+      "data": {
+        "id": "f55cc3fa-84a5-4b15-964c-e4bbb52c44a1"
+      },
+      "previous": "6516cccb2027671137b03867f4165d51d11e8ef790f96a19705aa3cc6ad75bbb",
+      "digest": "f7ba07bdf4a94de7a7f2f401fb9dd8ea45e00d94ba1d865dd479b171c45b1c1a"
     }
   ]
 }
