@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "repo": "workloom-ai/workroom-fox",
-  "revision": 662,
+  "revision": 664,
   "tasks": {
     "79": {
       "number": 79,
@@ -22,7 +22,7 @@
         "apps/server/src/trpc/router.ts"
       ],
       "ciSince": 1791315892733,
-      "updatedAt": 1791441917330,
+      "updatedAt": 1791442517605,
       "alignmentCount": 1,
       "alignmentIntent": null,
       "developerReview": null,
@@ -14658,6 +14658,43 @@
       },
       "previous": "27779941ec33867ded4da42c5bec8975db9c6a1a33d0fa4ae0160a79bf7dd5d9",
       "digest": "cd78d0560e0ea8e6bb08d6792abdb982aae0626695a1eeb5506b11b30a0e8cc9"
+    },
+    {
+      "sequence": 663,
+      "at": "2026-10-08T06:55:17.605Z",
+      "kind": "task",
+      "data": {
+        "number": 79,
+        "patch": {
+          "headSha": "9f65160eaf6e4e13f3852717fcd9e8d8589db443",
+          "mainSha": "e22d80fea9a7120e740b0984cf1f1ed30a218f9d",
+          "branch": "task/T-2026-1003-9104",
+          "intent": {
+            "taskId": "T-2026-1003-9104",
+            "dependsOn": [],
+            "releases": []
+          },
+          "originalBody": "当前 main 的行业路由仍用两参数 fenceRuleRowId 和固定 v-next，底层已有版本身份契约，导致服务端类型检查失败；修复同时消除旧固定版本提案流程的重复身份风险。本次复用基座已有版本递增、当前基线校验、同事务 dry-run 确认、事件及审批写入；保留本仓原有权限中间件，并对同一 pending dry-run 加行锁。连续提案分别落 v2/v3，失败不会消耗 pending 或留下半条事件/审批。\n\n验证：本仓 server 与 web 两项类型检查通过；16 项新增/更新回归通过。围栏测试使用真实隔离 PostgreSQL、RLS 与五元事件，成员身份和写入故障由模拟夹具注入；Tiger 交易执行器仅模拟，未接实盘。覆盖重复/并发提案、跨区/错规则/非 pending 拒绝、基线拒绝后重试、完整回滚及权限。\n\n扩展围栏检查仍有既有失败：共享 SDK 测试保留旧两参数调用及无版本事件断言；Eagle、Hyper 的遗留 AI-PM 围栏资产还缺少当前 DSL 要求的 version/default_level 字段。相关 SDK 生产代码、测试和夹具未被本 PR 修改，源文件已与基线比对，失败日志随交付留存。 不能把 allowFailure 流水线成功等同于全部业务测试通过。\n\n风险：review。本 PR 涉及围栏、事件、审批及 Tiger 授权输入，按开发协议保留 risk/review 人审；不移除风险标签，不强制合并。回滚：revert 本 PR，不改数据库 schema 或依赖。\n\n任务卡：https://cnb.cool/workloom-ai/workroom-fox/-/issues/78\n\n变更路径：\n- `apps/server/src/trpc/router.ts`\n- `apps/server/src/trpc/fence-proposal.pg.test.ts`",
+          "files": [
+            "apps/server/src/trpc/fence-proposal.pg.test.ts",
+            "apps/server/src/trpc/router.ts"
+          ],
+          "status": "parked",
+          "ciSince": 1791315892733
+        }
+      },
+      "previous": "cd78d0560e0ea8e6bb08d6792abdb982aae0626695a1eeb5506b11b30a0e8cc9",
+      "digest": "e73fa5cd14b840676702d2ee3ac185d385e6ea694ed1a99cac4795d98bb7a27b"
+    },
+    {
+      "sequence": 664,
+      "at": "2026-10-08T06:55:18.603Z",
+      "kind": "transaction",
+      "data": {
+        "id": "919f2437-0585-43e5-ae1c-32046a6af1ef"
+      },
+      "previous": "e73fa5cd14b840676702d2ee3ac185d385e6ea694ed1a99cac4795d98bb7a27b",
+      "digest": "5a042492009283c152ddce7e35908679e49186d23d31bf4e3503a76377101768"
     }
   ]
 }
