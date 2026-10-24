@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "workloom.repository/v1",
+  "logicalId": "workroom-fox",
+  "productId": "workroom-fox",
+  "lane": "experiment",
+  "primaryPlatform": "github",
+  "github": {
+    "repository": "geniusdapeng-collab/workroom-fox",
+    "url": "https://github.com/geniusdapeng-collab/workroom-fox",
+    "branch": "main"
+  },
+  "cnb": {
+    "repository": "workloom-ai/workroom-fox",
+    "url": "https://cnb.cool/workloom-ai/workroom-fox",
+    "branch": "main"
+  },
+  "mirrorPolicy": {
+    "platform": "cnb",
+    "mode": "deferred",
+    "automaticProductSync": false,
+    "configBackupBranchPrefix": "workloom/config-backup/"
+  },
+  "baseSync": {
+    "receive": "subscribed",
+    "reflux": "none",
+    "pathPrefix": "",
+    "extraExclude": [],
+    "uiRolloutWave": "W5",
+    "industryExtensionPaths": [
+      "apps/*/src/campaign/**",
+      "apps/*/src/components/fox-campaign/**",
+      "apps/*/src/pages/p0/**",
+      "apps/*/src/voice/**"
+    ],
+    "rolloutResumeNote": "2026-09-27 恢复波次（W5）：协议 §10.3 落地「实验车道受管文件分叉容差」——稳定快照或旧 state 占用本仓声明的 industryExtensionPaths 时，不再 fail closed，而是把这些路径从受管集合退管（记入 state.retiredManagedForks）并原样保留本仓版本；非实验车道保持严格模式。"
+  },
+  "registry": {
+    "repository": "geniusdapeng-collab/workloom-im",
+    "path": "sync/repository-registry.json"
+  }
+}
