@@ -4,7 +4,7 @@
   "role": "experiment",
   "displayName": "懂汇报的狐狸先生",
   "packageName": "workloom-hotel",
-  "repository": "workloom-ai/workroom-fox",
+  "repository": "geniusdapeng-collab/workroom-fox",
   "defaultBundle": "hotel",
   "demoWorkspaceSlug": "yunqi-hotel",
   "demoMemberNo": "MEM-001",
@@ -19,8 +19,17 @@
     "portOffset": 520
   },
   "clients": {
-    "bPc": { "enabled": true, "entry": "apps/web" },
-    "bMobile": { "enabled": true, "entry": "apps/webb" },
-    "cMobile": { "enabled": true, "entry": "apps/webc" }
+    "bPc": {
+      "enabled": true,
+      "entry": "apps/web"
+    },
+    "bMobile": {
+      "enabled": true,
+      "entry": "apps/webb"
+    },
+    "cMobile": {
+      "enabled": true,
+      "entry": "apps/webc"
+    }
   }
 }
