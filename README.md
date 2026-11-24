@@ -1,6 +1,6 @@
 # 懂汇报的狐狸先生 · Workroom Fox
 
-**Fox 用酒店演示场景试验数字员工怎样向人汇报。** 店主能在 3D 职场看到谁在忙、谁需要决定，也能在汇报舞台听晨报和告警。任务、审批和回执仍沿用 WorkLoom 的经营流程。
+**Fox 是 WorkLoom 的汇报与交互实验车道。** 店主可在云栖酒店演示的 3D 职场查看岗位和进展，在汇报舞台接收语音、字幕、晨报与告警，并跟随狐狸先生完成目标、派活、审批与验收。任务、审批和回执走 WorkLoom 的工作流。
 
 [首日引导设计](docs/fox-questline.md) · [视听实现](docs/tech-design-m1.md) · [仓库 Agent 指引](AGENTS.md)
 
@@ -12,6 +12,8 @@
 | 在汇报舞台收消息 | 通过语音和字幕看晨报、待决事项及告警。 |
 | 跟狐狸先生上岗 | 依次认识岗位、定目标、派任务、作决定并验收。 |
 
+首页经营赛季读取引导中的目标、派活、审批和交付状态。营收、出租率、差评与夜班等指标需要服务端聚合，未接入的指标按未知处理。 [引导与赛季接入源码](apps/web/src/extensions/fox/HomeQuestlineSlot.tsx)
+
 ## 界面预览
 
 下图沿用仓库现有的云栖酒店模拟运行截图。
@@ -22,7 +24,7 @@
 
 ## 架构与体验入口
 
-酒店行业包定义业务岗位和规则，WorkLoom 基座提供任务、审批和事件。Fox 在客户端增加 3D 职场、汇报舞台、环境声音、语音和字幕。[架构图](docs/images/architecture.png) · [业务循环图](docs/images/business-loop.png)
+酒店行业包定义业务岗位和规则，WorkLoom 基座提供任务、审批和事件。Fox 通过客户端扩展挂接首日引导与赛季，语音等实验路径按仓内规则独立维护，实验语义不下发、不覆盖、不回流。[架构图](docs/images/architecture.png) · [业务循环图](docs/images/business-loop.png)
 
 在独立环境准备 Node.js 24、仓库声明的 pnpm 和 Docker，运行 `pnpm setup` 后用 `pnpm app` 打开桌面演示，或用 `pnpm preview:all` 查看三端。 [预览清单](PREVIEW_CHECKLIST.md) · [演示数据](mock/README.md)
 
